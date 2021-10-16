@@ -820,25 +820,6 @@ var __createBinding;
 
 /***/ }),
 
-/***/ 865:
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-function wait(milliseconds) {
-    return new Promise(function (resolve) {
-        if (typeof milliseconds !== 'number') {
-            throw new TypeError('milliseconds not a number');
-        }
-        setTimeout(function () { return resolve('done!'); }, milliseconds);
-    });
-}
-exports.default = wait;
-
-
-/***/ }),
-
 /***/ 747:
 /***/ ((module) => {
 
@@ -910,30 +891,17 @@ var exports = __webpack_exports__;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 var tslib_1 = __nccwpck_require__(569);
 var core_1 = (0, tslib_1.__importDefault)(__nccwpck_require__(251));
-var wait_1 = (0, tslib_1.__importDefault)(__nccwpck_require__(865));
 // most @actions toolkit packages have async methods
 function run() {
     return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
-        var ms, error_1;
         return (0, tslib_1.__generator)(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    ms = core_1.default.getInput('milliseconds');
-                    core_1.default.info("Waiting " + ms + " milliseconds ...");
-                    core_1.default.debug(new Date().toTimeString()); // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
-                    return [4 /*yield*/, (0, wait_1.default)(parseInt(ms))];
-                case 1:
-                    _a.sent();
-                    core_1.default.info(new Date().toTimeString());
-                    core_1.default.setOutput('time', new Date().toTimeString());
-                    return [3 /*break*/, 3];
-                case 2:
-                    error_1 = _a.sent();
-                    core_1.default.setFailed(error_1.message);
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
+            try {
+                core_1.default.setOutput('message', 'hello world');
             }
+            catch (error) {
+                core_1.default.setFailed(error.message);
+            }
+            return [2 /*return*/];
         });
     });
 }

@@ -1,6 +1,6 @@
 {
-  "name": "@aiou/actions-template",
-  "version": "0.1.1",
+  "name": "@omcs/actions-friday",
+  "version": "0.0.0",
   "description": "TypeScript Action Template",
   "keywords": [
     "GitHub",
@@ -8,14 +8,14 @@
     "TypeScript"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/JiangWeixian/templates#readme",
+  "homepage": "https://github.com/ohmycheatsheet/actions-updater#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/JiangWeixian/templates",
+    "url": "https://github.com/ohmycheatsheet/actions-updater",
     "directory": "packages/actions-template"
   },
   "bugs": {
-    "url": "https://github.com/JiangWeixian/templates/issues",
+    "url": "https://github.com/ohmycheatsheet/actions-updater/issues",
     "email": "jiangweixian1994@gmail.com"
   },
   "author": "JW <jiangweixian1994@gmail.com> (https://twitter.com/jiangweixian)",
