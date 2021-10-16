@@ -1,11 +1,7 @@
 # @omcs/actions-updater
 *🚧 fetch cheatsheet template and update it*
 
-[![npm](https://img.shields.io/npm/v/@aiou/actions-template)](https://github.com/spring-catponents/actions-template) [![GitHub](https://img.shields.io/npm/l/@aiou/actions-template)](https://github.com/spring-catponents/actions-template) 
-
-Use this template to bootstrap the creation of a Typescript action.:rocket:
-
-This template includes tests, linting, a validation workflow, publishing, and versioning guidance.
+[![npm](https://img.shields.io/github/package-json/v/ohmycheatsheet/actions-updater)](https://github.com/ohmycheatsheet/actions-updater) [![GitHub](https://img.shields.io/github/license/ohmycheatsheet/actions-updater)](https://github.com/ohmycheatsheet/actions-updater)
 
 ## usage
 
