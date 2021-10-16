@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - master
+      - v1
       - 'releases/*'
 
 jobs:
@@ -31,5 +31,3 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: ./
-      with:
-        milliseconds: 1000
