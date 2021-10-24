@@ -34,8 +34,10 @@ jobs:
       with:
         repository: ohmycheatsheet/cheatsheets
         ref: v1
-        path: update-source
+        path: update-source/.omcs/source
         clean: false
     - uses: ./
+      with:
+        debug: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,5 +1,9 @@
 name: 'cheatsheets-updater'
 description: 'update latest cheatsheet template'
+inputs:
+  debug:
+    required: false
+    description: 'debug flag'
 outputs:
   time: # output will be available to future steps
     description: 'The message to output'

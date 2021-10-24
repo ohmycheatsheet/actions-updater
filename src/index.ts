@@ -4,6 +4,7 @@ import execa from 'execa'
 
 import { createPR } from './updater'
 import { setupUser } from './gitUtils'
+import { shouldUpdate } from './utils'
 
 async function run() {
   try {
@@ -11,6 +12,10 @@ async function run() {
     // create pull request
     const { stdout } = await execa('ls')
     console.log(stdout, repo)
+    if (!shouldUpdate()) {
+      core.setOutput('skip', 'same version detected')
+      return
+    }
     await setupUser()
     await createPR(repo.owner, repo.repo)
   } catch (error) {
