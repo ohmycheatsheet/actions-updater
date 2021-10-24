@@ -30,6 +30,7 @@ export const createPR = async (owner: string, name: string) => {
     const finalCommitMessage = `${commitMessage}`
     await gitUtils.commitAll(finalCommitMessage)
   }
+  await gitUtils.push(head, { force: true })
   // TODO: tag head branch
   // TODO: body changelog
   await octokit.graphql(

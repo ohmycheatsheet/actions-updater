@@ -12371,17 +12371,19 @@ var createPR = function (owner, name) { return (0, tslib_1.__awaiter)(void 0, vo
             case 5:
                 _a.sent();
                 _a.label = 6;
-            case 6: 
-            // TODO: tag head branch
-            // TODO: body changelog
-            return [4 /*yield*/, octokit.graphql(gql(templateObject_2 || (templateObject_2 = (0, tslib_1.__makeTemplateObject)(["\n      mutation CreatePullRequest(\n        $id: ID!\n        $base: String!\n        $head: String!\n        $title: String!\n        $body: String!\n      ) {\n        createPullRequest(\n          input: {\n            repositoryId: $id\n            baseRefName: $base\n            headRefName: $head\n            title: $title\n            body: $body\n          }\n        ) {\n          pullRequest {\n            id\n          }\n        }\n      }\n    "], ["\n      mutation CreatePullRequest(\n        $id: ID!\n        $base: String!\n        $head: String!\n        $title: String!\n        $body: String!\n      ) {\n        createPullRequest(\n          input: {\n            repositoryId: $id\n            baseRefName: $base\n            headRefName: $head\n            title: $title\n            body: $body\n          }\n        ) {\n          pullRequest {\n            id\n          }\n        }\n      }\n    "]))), {
-                    id: info.repository.id,
-                    base: branch,
-                    head: head,
-                    title: 'feat: update master',
-                    body: 'update master',
-                })];
+            case 6: return [4 /*yield*/, gitUtils.push(head, { force: true })];
             case 7:
+                _a.sent();
+                // TODO: tag head branch
+                // TODO: body changelog
+                return [4 /*yield*/, octokit.graphql(gql(templateObject_2 || (templateObject_2 = (0, tslib_1.__makeTemplateObject)(["\n      mutation CreatePullRequest(\n        $id: ID!\n        $base: String!\n        $head: String!\n        $title: String!\n        $body: String!\n      ) {\n        createPullRequest(\n          input: {\n            repositoryId: $id\n            baseRefName: $base\n            headRefName: $head\n            title: $title\n            body: $body\n          }\n        ) {\n          pullRequest {\n            id\n          }\n        }\n      }\n    "], ["\n      mutation CreatePullRequest(\n        $id: ID!\n        $base: String!\n        $head: String!\n        $title: String!\n        $body: String!\n      ) {\n        createPullRequest(\n          input: {\n            repositoryId: $id\n            baseRefName: $base\n            headRefName: $head\n            title: $title\n            body: $body\n          }\n        ) {\n          pullRequest {\n            id\n          }\n        }\n      }\n    "]))), {
+                        id: info.repository.id,
+                        base: branch,
+                        head: head,
+                        title: 'feat: update master',
+                        body: 'update master',
+                    })];
+            case 8:
                 // TODO: tag head branch
                 // TODO: body changelog
                 _a.sent();
