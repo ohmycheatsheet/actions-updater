@@ -10944,29 +10944,55 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createPR = void 0;
 var tslib_1 = __nccwpck_require__(1569);
 var github = (0, tslib_1.__importStar)(__nccwpck_require__(8262));
+var execa_1 = (0, tslib_1.__importDefault)(__nccwpck_require__(8950));
 var octokit = github.getOctokit(process.env.GITHUB_TOKEN);
 var gql = String.raw;
-var createPR = function (owner, name) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
-    var info;
+var checkout = function (branch) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+    var stderr, isCreatingBranch;
     return (0, tslib_1.__generator)(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, octokit.graphql(gql(templateObject_1 || (templateObject_1 = (0, tslib_1.__makeTemplateObject)(["\n      query GetRepoID($name: String!, $owner: String!) {\n        repository(name: $name, owner: $owner) {\n          id\n        }\n      }\n    "], ["\n      query GetRepoID($name: String!, $owner: String!) {\n        repository(name: $name, owner: $owner) {\n          id\n        }\n      }\n    "]))), {
-                    name: name,
+            case 0: return [4 /*yield*/, (0, execa_1.default)('git', ['checkout', branch])];
+            case 1:
+                stderr = (_a.sent()).stderr;
+                isCreatingBranch = !stderr.toString().includes("Switched to a new branch '" + branch + "'");
+                if (!isCreatingBranch) return [3 /*break*/, 3];
+                return [4 /*yield*/, (0, execa_1.default)('git', ['checkout', '-b', branch])];
+            case 2:
+                _a.sent();
+                _a.label = 3;
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+var createPR = function (owner, name) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+    var info, branch, head;
+    return (0, tslib_1.__generator)(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, octokit.graphql(gql(templateObject_1 || (templateObject_1 = (0, tslib_1.__makeTemplateObject)(["\n      query GetRepoID($owner: String!, $name: String!) {\n        repository(owner: $owner, name: $name) {\n          id\n        }\n      }\n    "], ["\n      query GetRepoID($owner: String!, $name: String!) {\n        repository(owner: $owner, name: $name) {\n          id\n        }\n      }\n    "]))), {
                     owner: owner,
+                    name: name,
                 })];
             case 1:
                 info = _a.sent();
                 console.log(info);
+                branch = github.context.ref.replace('refs/heads/', '');
+                head = 'omcs:latest';
+                return [4 /*yield*/, checkout(head)
+                    // TODO: tag head branch
+                    // TODO: body changelog
+                ];
+            case 2:
+                _a.sent();
                 // TODO: tag head branch
                 // TODO: body changelog
                 return [4 /*yield*/, octokit.graphql(gql(templateObject_2 || (templateObject_2 = (0, tslib_1.__makeTemplateObject)(["\n      mutation CreatePullRequest(\n        $id: ID!\n        $base: String!\n        $head: String!\n        $title: String!\n        $body: String!\n      ) {\n        createPullRequest(\n          input: {\n            repositoryId: $id\n            baseRefName: $base\n            headRefName: $head\n            title: $title\n            body: $body\n          }\n        ) {\n          pullRequest {\n            id\n          }\n        }\n      }\n    "], ["\n      mutation CreatePullRequest(\n        $id: ID!\n        $base: String!\n        $head: String!\n        $title: String!\n        $body: String!\n      ) {\n        createPullRequest(\n          input: {\n            repositoryId: $id\n            baseRefName: $base\n            headRefName: $head\n            title: $title\n            body: $body\n          }\n        ) {\n          pullRequest {\n            id\n          }\n        }\n      }\n    "]))), {
                         id: info.repository.id,
-                        base: 'v1',
-                        head: 'omcs:latest',
+                        base: branch,
+                        head: head,
                         title: 'feat: update master',
                         body: 'update master',
                     })];
-            case 2:
+            case 3:
                 // TODO: tag head branch
                 // TODO: body changelog
                 _a.sent();
