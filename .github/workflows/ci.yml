@@ -30,9 +30,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - uses: actions/checkout@v2
       with:
         repository: ohmycheatsheet/cheatsheets
         ref: v1
         path: ohmycheatsheet
-    - uses: actions/checkout@v2
+        clean: false
     - uses: ./
