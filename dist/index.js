@@ -12648,27 +12648,31 @@ var core = (0, tslib_1.__importStar)(__nccwpck_require__(5251));
 var github = (0, tslib_1.__importStar)(__nccwpck_require__(8262));
 var execa_1 = (0, tslib_1.__importDefault)(__nccwpck_require__(8950));
 var updater_1 = __nccwpck_require__(8849);
+var gitUtils_1 = __nccwpck_require__(1789);
 function run() {
     return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
         var repo, stdout, error_1;
         return (0, tslib_1.__generator)(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 3, , 4]);
+                    _a.trys.push([0, 4, , 5]);
                     repo = github.context.repo;
                     return [4 /*yield*/, (0, execa_1.default)('ls')];
                 case 1:
                     stdout = (_a.sent()).stdout;
                     console.log(stdout, repo);
-                    return [4 /*yield*/, (0, updater_1.createPR)(repo.owner, repo.repo)];
+                    return [4 /*yield*/, (0, gitUtils_1.setupUser)()];
                 case 2:
                     _a.sent();
-                    return [3 /*break*/, 4];
+                    return [4 /*yield*/, (0, updater_1.createPR)(repo.owner, repo.repo)];
                 case 3:
+                    _a.sent();
+                    return [3 /*break*/, 5];
+                case 4:
                     error_1 = _a.sent();
                     core.setFailed(error_1.message);
-                    return [3 /*break*/, 4];
-                case 4: return [2 /*return*/];
+                    return [3 /*break*/, 5];
+                case 5: return [2 /*return*/];
             }
         });
     });
