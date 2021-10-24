@@ -34,7 +34,7 @@ export const createPR = async (owner: string, name: string) => {
   console.log(searchResult)
 
   // read from .omcs/source
-  update()
+  await update()
   const commitMessage = 'chore: update template'
   // project with `commit: true` setting could have already committed files
   if (!(await gitUtils.checkIfClean())) {
@@ -44,7 +44,6 @@ export const createPR = async (owner: string, name: string) => {
   await gitUtils.push(head, { force: true })
   // create pr
   const body = readChangelog()
-  // TODO: tag head branch
   if (searchResult.data.items.length === 0) {
     await octokit.rest.pulls.create({
       base: branch,
@@ -54,7 +53,7 @@ export const createPR = async (owner: string, name: string) => {
       ...github.context.repo,
     })
   } else {
-    octokit.rest.pulls.update({
+    await octokit.rest.pulls.update({
       pull_number: searchResult.data.items[0].number,
       title: 'feat: update template',
       body,

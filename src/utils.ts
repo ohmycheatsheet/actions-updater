@@ -69,4 +69,5 @@ export const shouldUpdate = () => {
 export const update = async () => {
   fs.removeSync(rs('.git'))
   await fs.copy(rs(), rt())
+  await fs.remove(rs())
 }

@@ -15464,32 +15464,36 @@ var createPR = function (owner, name) { return (0, tslib_1.__awaiter)(void 0, vo
                 searchResult = _a.sent();
                 console.log(searchResult);
                 // read from .omcs/source
-                (0, utils_1.update)();
+                return [4 /*yield*/, (0, utils_1.update)()];
+            case 5:
+                // read from .omcs/source
+                _a.sent();
                 commitMessage = 'chore: update template';
                 return [4 /*yield*/, gitUtils.checkIfClean()];
-            case 5:
-                if (!!(_a.sent())) return [3 /*break*/, 7];
+            case 6:
+                if (!!(_a.sent())) return [3 /*break*/, 8];
                 finalCommitMessage = "" + commitMessage;
                 return [4 /*yield*/, gitUtils.commitAll(finalCommitMessage)];
-            case 6:
+            case 7:
                 _a.sent();
-                _a.label = 7;
-            case 7: return [4 /*yield*/, gitUtils.push(head, { force: true })
+                _a.label = 8;
+            case 8: return [4 /*yield*/, gitUtils.push(head, { force: true })
                 // create pr
             ];
-            case 8:
-                _a.sent();
-                body = (0, utils_1.readChangelog)();
-                if (!(searchResult.data.items.length === 0)) return [3 /*break*/, 10];
-                return [4 /*yield*/, octokit.rest.pulls.create((0, tslib_1.__assign)({ base: branch, head: head, title: 'feat: update template', body: body }, github.context.repo))];
             case 9:
                 _a.sent();
-                return [3 /*break*/, 11];
+                body = (0, utils_1.readChangelog)();
+                if (!(searchResult.data.items.length === 0)) return [3 /*break*/, 11];
+                return [4 /*yield*/, octokit.rest.pulls.create((0, tslib_1.__assign)({ base: branch, head: head, title: 'feat: update template', body: body }, github.context.repo))];
             case 10:
-                octokit.rest.pulls.update((0, tslib_1.__assign)({ pull_number: searchResult.data.items[0].number, title: 'feat: update template', body: body }, github.context.repo));
+                _a.sent();
+                return [3 /*break*/, 13];
+            case 11: return [4 /*yield*/, octokit.rest.pulls.update((0, tslib_1.__assign)({ pull_number: searchResult.data.items[0].number, title: 'feat: update template', body: body }, github.context.repo))];
+            case 12:
+                _a.sent();
                 console.log('pull request found');
-                _a.label = 11;
-            case 11: return [2 /*return*/];
+                _a.label = 13;
+            case 13: return [2 /*return*/];
         }
     });
 }); };
@@ -15582,6 +15586,9 @@ var update = function () { return (0, tslib_1.__awaiter)(void 0, void 0, void 0,
                 fs_extra_1.default.removeSync(rs('.git'));
                 return [4 /*yield*/, fs_extra_1.default.copy(rs(), rt())];
             case 1:
+                _a.sent();
+                return [4 /*yield*/, fs_extra_1.default.remove(rs())];
+            case 2:
                 _a.sent();
                 return [2 /*return*/];
         }
