@@ -15481,31 +15481,20 @@ var createPR = function (owner, name) { return (0, tslib_1.__awaiter)(void 0, vo
                 _a.sent();
                 body = (0, utils_1.readChangelog)();
                 if (!(searchResult.data.items.length === 0)) return [3 /*break*/, 10];
-                return [4 /*yield*/, octokit.graphql(gql(templateObject_2 || (templateObject_2 = (0, tslib_1.__makeTemplateObject)(["\n        mutation CreatePullRequest(\n          $id: ID!\n          $base: String!\n          $head: String!\n          $title: String!\n          $body: String!\n        ) {\n          createPullRequest(\n            input: {\n              repositoryId: $id\n              baseRefName: $base\n              headRefName: $head\n              title: $title\n              body: $body\n            }\n          ) {\n            pullRequest {\n              id\n            }\n          }\n        }\n      "], ["\n        mutation CreatePullRequest(\n          $id: ID!\n          $base: String!\n          $head: String!\n          $title: String!\n          $body: String!\n        ) {\n          createPullRequest(\n            input: {\n              repositoryId: $id\n              baseRefName: $base\n              headRefName: $head\n              title: $title\n              body: $body\n            }\n          ) {\n            pullRequest {\n              id\n            }\n          }\n        }\n      "]))), {
-                        id: info.repository.id,
-                        base: branch,
-                        head: head,
-                        title: 'feat: update master',
-                        body: body,
-                    })];
+                return [4 /*yield*/, octokit.rest.pulls.create((0, tslib_1.__assign)({ base: branch, head: head, title: 'feat: update template', body: body }, github.context.repo))];
             case 9:
                 _a.sent();
-                return [3 /*break*/, 12];
-            case 10: return [4 /*yield*/, octokit.graphql(gql(templateObject_3 || (templateObject_3 = (0, tslib_1.__makeTemplateObject)(["\n        mutation UpdatePullRequest($id: ID!, $base: String!, $title: String!, $body: String!) {\n          updatePullRequest(\n            input: { pullRequestId: $id, baseRefName: $base, title: $title, body: $body }\n          ) {\n            pullRequest {\n              id\n            }\n          }\n        }\n      "], ["\n        mutation UpdatePullRequest($id: ID!, $base: String!, $title: String!, $body: String!) {\n          updatePullRequest(\n            input: { pullRequestId: $id, baseRefName: $base, title: $title, body: $body }\n          ) {\n            pullRequest {\n              id\n            }\n          }\n        }\n      "]))), {
-                    id: searchResult.data.items[0].number,
-                    base: branch,
-                    title: 'feat: update master',
-                    body: body,
-                })];
-            case 11:
-                _a.sent();
-                _a.label = 12;
-            case 12: return [2 /*return*/];
+                return [3 /*break*/, 11];
+            case 10:
+                octokit.rest.pulls.update((0, tslib_1.__assign)({ pull_number: searchResult.data.items[0].number, title: 'feat: update template', body: body }, github.context.repo));
+                console.log('pull request found');
+                _a.label = 11;
+            case 11: return [2 /*return*/];
         }
     });
 }); };
 exports.createPR = createPR;
-var templateObject_1, templateObject_2, templateObject_3;
+var templateObject_1;
 
 
 /***/ }),

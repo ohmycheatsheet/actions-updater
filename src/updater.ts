@@ -46,57 +46,20 @@ export const createPR = async (owner: string, name: string) => {
   const body = readChangelog()
   // TODO: tag head branch
   if (searchResult.data.items.length === 0) {
-    await octokit.graphql(
-      gql`
-        mutation CreatePullRequest(
-          $id: ID!
-          $base: String!
-          $head: String!
-          $title: String!
-          $body: String!
-        ) {
-          createPullRequest(
-            input: {
-              repositoryId: $id
-              baseRefName: $base
-              headRefName: $head
-              title: $title
-              body: $body
-            }
-          ) {
-            pullRequest {
-              id
-            }
-          }
-        }
-      `,
-      {
-        id: info.repository.id,
-        base: branch,
-        head,
-        title: 'feat: update master',
-        body,
-      },
-    )
+    await octokit.rest.pulls.create({
+      base: branch,
+      head,
+      title: 'feat: update template',
+      body,
+      ...github.context.repo,
+    })
   } else {
-    await octokit.graphql(
-      gql`
-        mutation UpdatePullRequest($id: ID!, $base: String!, $title: String!, $body: String!) {
-          updatePullRequest(
-            input: { pullRequestId: $id, baseRefName: $base, title: $title, body: $body }
-          ) {
-            pullRequest {
-              id
-            }
-          }
-        }
-      `,
-      {
-        id: searchResult.data.items[0].number,
-        base: branch,
-        title: 'feat: update master',
-        body,
-      },
-    )
+    octokit.rest.pulls.update({
+      pull_number: searchResult.data.items[0].number,
+      title: 'feat: update template',
+      body,
+      ...github.context.repo,
+    })
+    console.log('pull request found')
   }
 }
