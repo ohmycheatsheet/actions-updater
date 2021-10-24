@@ -11180,19 +11180,21 @@ function run() {
         return (0, tslib_1.__generator)(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 2, , 3]);
+                    _a.trys.push([0, 3, , 4]);
                     repo = github.context.repo;
                     return [4 /*yield*/, (0, execa_1.default)('ls')];
                 case 1:
                     stdout = (_a.sent()).stdout;
                     console.log(stdout);
-                    (0, updater_1.createPR)(repo.owner, repo.repo);
-                    return [3 /*break*/, 3];
+                    return [4 /*yield*/, (0, updater_1.createPR)(repo.owner, repo.repo)];
                 case 2:
+                    _a.sent();
+                    return [3 /*break*/, 4];
+                case 3:
                     error_1 = _a.sent();
                     core_1.default.setFailed(error_1.message);
-                    return [3 /*break*/, 3];
-                case 3: return [2 /*return*/];
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
             }
         });
     });
