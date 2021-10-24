@@ -10961,7 +10961,7 @@ var createPR = function (owner, name) { return (0, tslib_1.__awaiter)(void 0, vo
                 // TODO: body changelog
                 return [4 /*yield*/, octokit.graphql(gql(templateObject_2 || (templateObject_2 = (0, tslib_1.__makeTemplateObject)(["\n      mutation CreatePullRequest(\n        $id: ID!\n        $base: String!\n        $head: String!\n        $title: String!\n        $body: String!\n      ) {\n        createPullRequest(\n          input: {\n            repositoryId: $id\n            baseRefName: $base\n            headRefName: $head\n            title: $title\n            body: $body\n          }\n        ) {\n          pullRequest {\n            id\n          }\n        }\n      }\n    "], ["\n      mutation CreatePullRequest(\n        $id: ID!\n        $base: String!\n        $head: String!\n        $title: String!\n        $body: String!\n      ) {\n        createPullRequest(\n          input: {\n            repositoryId: $id\n            baseRefName: $base\n            headRefName: $head\n            title: $title\n            body: $body\n          }\n        ) {\n          pullRequest {\n            id\n          }\n        }\n      }\n    "]))), {
                         id: info.repository.id,
-                        base: 'master',
+                        base: 'v1',
                         head: 'omcs:latest',
                         title: 'feat: update master',
                         body: 'update master',
@@ -11185,7 +11185,7 @@ function run() {
                     return [4 /*yield*/, (0, execa_1.default)('ls')];
                 case 1:
                     stdout = (_a.sent()).stdout;
-                    console.log(stdout);
+                    console.log(stdout, repo);
                     return [4 /*yield*/, (0, updater_1.createPR)(repo.owner, repo.repo)];
                 case 2:
                     _a.sent();

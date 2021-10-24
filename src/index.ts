@@ -9,7 +9,7 @@ async function run() {
     const { repo } = github.context
     // create pull request
     const { stdout } = await execa('ls')
-    console.log(stdout)
+    console.log(stdout, repo)
     await createPR(repo.owner, repo.repo)
   } catch (error) {
     core.setFailed((error as any).message)

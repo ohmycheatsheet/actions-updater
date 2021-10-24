@@ -46,7 +46,7 @@ export const createPR = async (owner: string, name: string) => {
     `,
     {
       id: info.repository.id,
-      base: 'master',
+      base: 'v1',
       head: 'omcs:latest',
       title: 'feat: update master',
       body: 'update master',
