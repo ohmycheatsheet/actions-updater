@@ -1,7 +1,7 @@
 {
-  "name": "@omcs/actions-friday",
+  "name": "@omcs/actions-updater",
   "version": "0.0.0",
-  "description": "TypeScript Action Template",
+  "description": "update repo from another repo",
   "keywords": [
     "GitHub",
     "Actions",
@@ -25,8 +25,7 @@
     "prepare": "ncc build ./src/index.ts -o dist --source-map --license licenses.txt && husky install",
     "test": "jest --setupFiles dotenv/config",
     "all": "pnpm run lint && pnpm run prepare && pnpm run test",
-    "ci:version": "pnpx changeset version",
-    "ci:publish": "pnpx changeset publish"
+    "ci:version": "pnpx changeset version"
   },
   "lint-staged": {
     "**/**/*.{js,ts,vue,json}": [
@@ -34,7 +33,9 @@
     ]
   },
   "dependencies": {
-    "@actions/core": "^1.5.0"
+    "@actions/core": "^1.5.0",
+    "@actions/github": "^5.0.0",
+    "execa": "^5.1.1"
   },
   "devDependencies": {
     "@aiou/eslint-config": "^0.2.2",

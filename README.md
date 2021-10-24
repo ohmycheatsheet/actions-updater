@@ -1,5 +1,5 @@
 # @omcs/actions-updater
-*🚧 fetch cheatsheet template and update it*
+*🚧 fetch remote repo and update target repo*
 
 [![npm](https://img.shields.io/github/package-json/v/ohmycheatsheet/actions-updater)](https://github.com/ohmycheatsheet/actions-updater) [![GitHub](https://img.shields.io/github/license/ohmycheatsheet/actions-updater)](https://github.com/ohmycheatsheet/actions-updater)
 

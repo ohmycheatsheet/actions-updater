@@ -1,9 +1,16 @@
 import core from '@actions/core'
+// import * as github from '@actions/github'
+import execa from 'execa'
 
-// most @actions toolkit packages have async methods
+// import { createPR } from './updater'
+
 async function run() {
   try {
-    core.setOutput('message', 'hello world')
+    // const { repo } = github.context
+    // create pull request
+    const { stdout } = await execa('ls')
+    console.log(stdout)
+    // createPR(repo)
   } catch (error) {
     core.setFailed((error as any).message)
   }
