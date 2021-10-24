@@ -10946,20 +10946,27 @@ var tslib_1 = __nccwpck_require__(1569);
 var github = (0, tslib_1.__importStar)(__nccwpck_require__(8262));
 var octokit = github.getOctokit(process.env.GITHUB_TOKEN);
 var gql = String.raw;
-var createPR = function (repo) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+var createPR = function (owner, repo) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+    var info;
     return (0, tslib_1.__generator)(this, function (_a) {
         switch (_a.label) {
-            case 0: 
-            // TODO: tag head branch
-            // TODO: body changelog
-            return [4 /*yield*/, octokit.graphql(gql(templateObject_1 || (templateObject_1 = (0, tslib_1.__makeTemplateObject)(["\n      mutation CreatePullRequest(\n        $id: ID!\n        $base: String!\n        $head: String!\n        $title: String!\n        $body: String!\n      ) {\n        createPullRequest(\n          input: {\n            repositoryId: $id\n            baseRefName: $base\n            headRefName: $head\n            title: $title\n            body: $body\n          }\n        ) {\n          pullRequest {\n            id\n          }\n        }\n      }\n    "], ["\n      mutation CreatePullRequest(\n        $id: ID!\n        $base: String!\n        $head: String!\n        $title: String!\n        $body: String!\n      ) {\n        createPullRequest(\n          input: {\n            repositoryId: $id\n            baseRefName: $base\n            headRefName: $head\n            title: $title\n            body: $body\n          }\n        ) {\n          pullRequest {\n            id\n          }\n        }\n      }\n    "]))), {
-                    id: repo,
-                    base: 'master',
-                    head: 'omcs:v1',
-                    title: 'feat: update master',
-                    body: 'update master',
+            case 0: return [4 /*yield*/, octokit.graphql(gql(templateObject_1 || (templateObject_1 = (0, tslib_1.__makeTemplateObject)(["\n      query GetRepoID($name: String!, $owner: String!) {\n        repository(name: $name, owner: $owner) {\n          id\n        }\n      }\n    "], ["\n      query GetRepoID($name: String!, $owner: String!) {\n        repository(name: $name, owner: $owner) {\n          id\n        }\n      }\n    "]))), {
+                    repo: repo,
+                    owner: owner,
                 })];
             case 1:
+                info = _a.sent();
+                console.log(info);
+                // TODO: tag head branch
+                // TODO: body changelog
+                return [4 /*yield*/, octokit.graphql(gql(templateObject_2 || (templateObject_2 = (0, tslib_1.__makeTemplateObject)(["\n      mutation CreatePullRequest(\n        $id: ID!\n        $base: String!\n        $head: String!\n        $title: String!\n        $body: String!\n      ) {\n        createPullRequest(\n          input: {\n            repositoryId: $id\n            baseRefName: $base\n            headRefName: $head\n            title: $title\n            body: $body\n          }\n        ) {\n          pullRequest {\n            id\n          }\n        }\n      }\n    "], ["\n      mutation CreatePullRequest(\n        $id: ID!\n        $base: String!\n        $head: String!\n        $title: String!\n        $body: String!\n      ) {\n        createPullRequest(\n          input: {\n            repositoryId: $id\n            baseRefName: $base\n            headRefName: $head\n            title: $title\n            body: $body\n          }\n        ) {\n          pullRequest {\n            id\n          }\n        }\n      }\n    "]))), {
+                        id: info.repository.id,
+                        base: 'master',
+                        head: 'omcs:latest',
+                        title: 'feat: update master',
+                        body: 'update master',
+                    })];
+            case 2:
                 // TODO: tag head branch
                 // TODO: body changelog
                 _a.sent();
@@ -10968,7 +10975,7 @@ var createPR = function (repo) { return (0, tslib_1.__awaiter)(void 0, void 0, v
     });
 }); };
 exports.createPR = createPR;
-var templateObject_1;
+var templateObject_1, templateObject_2;
 
 
 /***/ }),
@@ -11179,7 +11186,7 @@ function run() {
                 case 1:
                     stdout = (_a.sent()).stdout;
                     console.log(stdout);
-                    (0, updater_1.createPR)(repo.repo);
+                    (0, updater_1.createPR)(repo.owner, repo.repo);
                     return [3 /*break*/, 3];
                 case 2:
                     error_1 = _a.sent();

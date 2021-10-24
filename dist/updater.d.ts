@@ -1,1 +1,1 @@
-export declare const createPR: (repo: string) => Promise<void>;
+export declare const createPR: (owner: string, repo: string) => Promise<void>;

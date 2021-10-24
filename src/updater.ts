@@ -3,7 +3,21 @@ import * as github from '@actions/github'
 const octokit = github.getOctokit(process.env.GITHUB_TOKEN!)
 const gql = String.raw
 
-export const createPR = async (repo: string) => {
+export const createPR = async (owner: string, repo: string) => {
+  const info: any = await octokit.graphql(
+    gql`
+      query GetRepoID($name: String!, $owner: String!) {
+        repository(name: $name, owner: $owner) {
+          id
+        }
+      }
+    `,
+    {
+      repo,
+      owner,
+    },
+  )
+  console.log(info)
   // TODO: tag head branch
   // TODO: body changelog
   await octokit.graphql(
@@ -31,9 +45,9 @@ export const createPR = async (repo: string) => {
       }
     `,
     {
-      id: repo,
+      id: info.repository.id,
       base: 'master',
-      head: 'omcs:v1',
+      head: 'omcs:latest',
       title: 'feat: update master',
       body: 'update master',
     },
