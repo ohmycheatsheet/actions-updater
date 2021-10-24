@@ -11170,7 +11170,7 @@ var exports = __webpack_exports__;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 var tslib_1 = __nccwpck_require__(1569);
-var core_1 = (0, tslib_1.__importDefault)(__nccwpck_require__(5251));
+var core = (0, tslib_1.__importStar)(__nccwpck_require__(5251));
 var github = (0, tslib_1.__importStar)(__nccwpck_require__(8262));
 var execa_1 = (0, tslib_1.__importDefault)(__nccwpck_require__(8950));
 var updater_1 = __nccwpck_require__(8849);
@@ -11192,7 +11192,7 @@ function run() {
                     return [3 /*break*/, 4];
                 case 3:
                     error_1 = _a.sent();
-                    core_1.default.setFailed(error_1.message);
+                    core.setFailed(error_1.message);
                     return [3 /*break*/, 4];
                 case 4: return [2 /*return*/];
             }
