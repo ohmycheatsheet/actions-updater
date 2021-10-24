@@ -12202,20 +12202,210 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
+/***/ 1789:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.checkIfClean = exports.commitAll = exports.reset = exports.switchToMaybeExistingBranch = exports.pushTags = exports.push = exports.pullBranch = exports.setupUser = void 0;
+var tslib_1 = __nccwpck_require__(1569);
+var exec_1 = __nccwpck_require__(3531);
+var utils_1 = __nccwpck_require__(1725);
+var setupUser = function () { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+    return (0, tslib_1.__generator)(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, (0, exec_1.exec)('git', ['config', '--global', 'user.name', "\"github-actions[bot]\""])];
+            case 1:
+                _a.sent();
+                return [4 /*yield*/, (0, exec_1.exec)('git', [
+                        'config',
+                        '--global',
+                        'user.email',
+                        "\"github-actions[bot]@users.noreply.github.com\"",
+                    ])];
+            case 2:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); };
+exports.setupUser = setupUser;
+var pullBranch = function (branch) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+    return (0, tslib_1.__generator)(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, (0, exec_1.exec)('git', ['pull', 'origin', branch])];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); };
+exports.pullBranch = pullBranch;
+var push = function (branch, _a) {
+    var _b = _a === void 0 ? {} : _a, force = _b.force;
+    return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+        return (0, tslib_1.__generator)(this, function (_c) {
+            switch (_c.label) {
+                case 0: return [4 /*yield*/, (0, exec_1.exec)('git', ['push', 'origin', "HEAD:" + branch, force && '--force'].filter(Boolean))];
+                case 1:
+                    _c.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+};
+exports.push = push;
+var pushTags = function () { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+    return (0, tslib_1.__generator)(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, (0, exec_1.exec)('git', ['push', 'origin', '--tags'])];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); };
+exports.pushTags = pushTags;
+var switchToMaybeExistingBranch = function (branch) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+    var stderr, isCreatingBranch;
+    return (0, tslib_1.__generator)(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, (0, utils_1.execWithOutput)('git', ['checkout', branch], {
+                    ignoreReturnCode: true,
+                })];
+            case 1:
+                stderr = (_a.sent()).stderr;
+                isCreatingBranch = !stderr.toString().includes("Switched to a new branch '" + branch + "'");
+                if (!isCreatingBranch) return [3 /*break*/, 3];
+                return [4 /*yield*/, (0, exec_1.exec)('git', ['checkout', '-b', branch])];
+            case 2:
+                _a.sent();
+                _a.label = 3;
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+exports.switchToMaybeExistingBranch = switchToMaybeExistingBranch;
+var reset = function (pathSpec, mode) {
+    if (mode === void 0) { mode = 'hard'; }
+    return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+        return (0, tslib_1.__generator)(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, (0, exec_1.exec)('git', ['reset', "--" + mode, pathSpec])];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+};
+exports.reset = reset;
+var commitAll = function (message) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+    return (0, tslib_1.__generator)(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, (0, exec_1.exec)('git', ['add', '.'])];
+            case 1:
+                _a.sent();
+                return [4 /*yield*/, (0, exec_1.exec)('git', ['commit', '-m', message])];
+            case 2:
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); };
+exports.commitAll = commitAll;
+var checkIfClean = function () { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+    var stdout;
+    return (0, tslib_1.__generator)(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, (0, utils_1.execWithOutput)('git', ['status', '--porcelain'])];
+            case 1:
+                stdout = (_a.sent()).stdout;
+                return [2 /*return*/, !stdout.length];
+        }
+    });
+}); };
+exports.checkIfClean = checkIfClean;
+
+
+/***/ }),
+
 /***/ 8849:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createPR = exports.execWithOutput = void 0;
+exports.createPR = void 0;
 var tslib_1 = __nccwpck_require__(1569);
 var github = (0, tslib_1.__importStar)(__nccwpck_require__(8262));
-var exec_1 = __nccwpck_require__(3531);
+var gitUtils = (0, tslib_1.__importStar)(__nccwpck_require__(1789));
 var octokit = github.getOctokit(process.env.GITHUB_TOKEN);
 var gql = String.raw;
+var createPR = function (owner, name) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+    var info, branch, head, commitMessage, finalCommitMessage;
+    return (0, tslib_1.__generator)(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, octokit.graphql(gql(templateObject_1 || (templateObject_1 = (0, tslib_1.__makeTemplateObject)(["\n      query GetRepoID($owner: String!, $name: String!) {\n        repository(owner: $owner, name: $name) {\n          id\n        }\n      }\n    "], ["\n      query GetRepoID($owner: String!, $name: String!) {\n        repository(owner: $owner, name: $name) {\n          id\n        }\n      }\n    "]))), {
+                    owner: owner,
+                    name: name,
+                })];
+            case 1:
+                info = _a.sent();
+                console.log(info);
+                branch = github.context.ref.replace('refs/heads/', '');
+                head = 'omcs/latest';
+                return [4 /*yield*/, gitUtils.switchToMaybeExistingBranch(head)];
+            case 2:
+                _a.sent();
+                return [4 /*yield*/, gitUtils.reset(github.context.sha)];
+            case 3:
+                _a.sent();
+                commitMessage = 'chore: update template';
+                return [4 /*yield*/, gitUtils.checkIfClean()];
+            case 4:
+                if (!!(_a.sent())) return [3 /*break*/, 6];
+                finalCommitMessage = "" + commitMessage;
+                return [4 /*yield*/, gitUtils.commitAll(finalCommitMessage)];
+            case 5:
+                _a.sent();
+                _a.label = 6;
+            case 6: 
+            // TODO: tag head branch
+            // TODO: body changelog
+            return [4 /*yield*/, octokit.graphql(gql(templateObject_2 || (templateObject_2 = (0, tslib_1.__makeTemplateObject)(["\n      mutation CreatePullRequest(\n        $id: ID!\n        $base: String!\n        $head: String!\n        $title: String!\n        $body: String!\n      ) {\n        createPullRequest(\n          input: {\n            repositoryId: $id\n            baseRefName: $base\n            headRefName: $head\n            title: $title\n            body: $body\n          }\n        ) {\n          pullRequest {\n            id\n          }\n        }\n      }\n    "], ["\n      mutation CreatePullRequest(\n        $id: ID!\n        $base: String!\n        $head: String!\n        $title: String!\n        $body: String!\n      ) {\n        createPullRequest(\n          input: {\n            repositoryId: $id\n            baseRefName: $base\n            headRefName: $head\n            title: $title\n            body: $body\n          }\n        ) {\n          pullRequest {\n            id\n          }\n        }\n      }\n    "]))), {
+                    id: info.repository.id,
+                    base: branch,
+                    head: head,
+                    title: 'feat: update master',
+                    body: 'update master',
+                })];
+            case 7:
+                // TODO: tag head branch
+                // TODO: body changelog
+                _a.sent();
+                return [2 /*return*/];
+        }
+    });
+}); };
+exports.createPR = createPR;
+var templateObject_1, templateObject_2;
+
+
+/***/ }),
+
+/***/ 1725:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.execWithOutput = void 0;
+var tslib_1 = __nccwpck_require__(1569);
+var exec_1 = __nccwpck_require__(3531);
 /**
- * @see {@link https://github.com/changesets/action/blob/master/src/gitUtils.ts}
+ * @see {@link https://github.com/changesets/action/blob/master/src/utils.ts}
  */
 function execWithOutput(command, args, options) {
     return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
@@ -12244,61 +12434,6 @@ function execWithOutput(command, args, options) {
     });
 }
 exports.execWithOutput = execWithOutput;
-var checkout = function (branch) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
-    var stderr, isCreatingBranch;
-    return (0, tslib_1.__generator)(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, execWithOutput('git', ['checkout', branch], { ignoreReturnCode: true })];
-            case 1:
-                stderr = (_a.sent()).stderr;
-                isCreatingBranch = !stderr.toString().includes("Switched to a new branch '" + branch + "'");
-                if (!isCreatingBranch) return [3 /*break*/, 3];
-                return [4 /*yield*/, (0, exec_1.exec)('git', ['checkout', '-b', branch])];
-            case 2:
-                _a.sent();
-                _a.label = 3;
-            case 3: return [2 /*return*/];
-        }
-    });
-}); };
-var createPR = function (owner, name) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
-    var info, branch, head;
-    return (0, tslib_1.__generator)(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, octokit.graphql(gql(templateObject_1 || (templateObject_1 = (0, tslib_1.__makeTemplateObject)(["\n      query GetRepoID($owner: String!, $name: String!) {\n        repository(owner: $owner, name: $name) {\n          id\n        }\n      }\n    "], ["\n      query GetRepoID($owner: String!, $name: String!) {\n        repository(owner: $owner, name: $name) {\n          id\n        }\n      }\n    "]))), {
-                    owner: owner,
-                    name: name,
-                })];
-            case 1:
-                info = _a.sent();
-                console.log(info);
-                branch = github.context.ref.replace('refs/heads/', '');
-                head = 'omcs/latest';
-                return [4 /*yield*/, checkout(head)
-                    // TODO: tag head branch
-                    // TODO: body changelog
-                ];
-            case 2:
-                _a.sent();
-                // TODO: tag head branch
-                // TODO: body changelog
-                return [4 /*yield*/, octokit.graphql(gql(templateObject_2 || (templateObject_2 = (0, tslib_1.__makeTemplateObject)(["\n      mutation CreatePullRequest(\n        $id: ID!\n        $base: String!\n        $head: String!\n        $title: String!\n        $body: String!\n      ) {\n        createPullRequest(\n          input: {\n            repositoryId: $id\n            baseRefName: $base\n            headRefName: $head\n            title: $title\n            body: $body\n          }\n        ) {\n          pullRequest {\n            id\n          }\n        }\n      }\n    "], ["\n      mutation CreatePullRequest(\n        $id: ID!\n        $base: String!\n        $head: String!\n        $title: String!\n        $body: String!\n      ) {\n        createPullRequest(\n          input: {\n            repositoryId: $id\n            baseRefName: $base\n            headRefName: $head\n            title: $title\n            body: $body\n          }\n        ) {\n          pullRequest {\n            id\n          }\n        }\n      }\n    "]))), {
-                        id: info.repository.id,
-                        base: branch,
-                        head: head,
-                        title: 'feat: update master',
-                        body: 'update master',
-                    })];
-            case 3:
-                // TODO: tag head branch
-                // TODO: body changelog
-                _a.sent();
-                return [2 /*return*/];
-        }
-    });
-}); };
-exports.createPR = createPR;
-var templateObject_1, templateObject_2;
 
 
 /***/ }),
