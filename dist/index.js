@@ -15438,7 +15438,7 @@ var utils_1 = __nccwpck_require__(1725);
 var octokit = github.getOctokit(process.env.GITHUB_TOKEN);
 var gql = String.raw;
 var createPR = function (owner, name) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
-    var info, branch, head, commitMessage, finalCommitMessage, body;
+    var info, branch, head, searchQuery, searchResult, commitMessage, finalCommitMessage, body;
     return (0, tslib_1.__generator)(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, octokit.graphql(gql(templateObject_1 || (templateObject_1 = (0, tslib_1.__makeTemplateObject)(["\n      query GetRepoID($owner: String!, $name: String!) {\n        repository(owner: $owner, name: $name) {\n          id\n        }\n      }\n    "], ["\n      query GetRepoID($owner: String!, $name: String!) {\n        repository(owner: $owner, name: $name) {\n          id\n        }\n      }\n    "]))), {
@@ -15453,45 +15453,59 @@ var createPR = function (owner, name) { return (0, tslib_1.__awaiter)(void 0, vo
                 return [4 /*yield*/, gitUtils.switchToMaybeExistingBranch(head)];
             case 2:
                 _a.sent();
-                return [4 /*yield*/, gitUtils.reset(github.context.sha)
-                    // read from .omcs/source
-                ];
+                return [4 /*yield*/, gitUtils.reset(github.context.sha)];
             case 3:
                 _a.sent();
+                searchQuery = "repo:" + owner + "/" + name + "+state:open+head:" + head + "+base:" + branch;
+                return [4 /*yield*/, octokit.rest.search.issuesAndPullRequests({
+                        q: searchQuery,
+                    })];
+            case 4:
+                searchResult = _a.sent();
+                console.log(searchResult);
                 // read from .omcs/source
                 (0, utils_1.update)();
                 commitMessage = 'chore: update template';
                 return [4 /*yield*/, gitUtils.checkIfClean()];
-            case 4:
-                if (!!(_a.sent())) return [3 /*break*/, 6];
+            case 5:
+                if (!!(_a.sent())) return [3 /*break*/, 7];
                 finalCommitMessage = "" + commitMessage;
                 return [4 /*yield*/, gitUtils.commitAll(finalCommitMessage)];
-            case 5:
+            case 6:
                 _a.sent();
-                _a.label = 6;
-            case 6: return [4 /*yield*/, gitUtils.push(head, { force: true })
+                _a.label = 7;
+            case 7: return [4 /*yield*/, gitUtils.push(head, { force: true })
                 // create pr
             ];
-            case 7:
+            case 8:
                 _a.sent();
                 body = (0, utils_1.readChangelog)();
-                // TODO: tag head branch
-                return [4 /*yield*/, octokit.graphql(gql(templateObject_2 || (templateObject_2 = (0, tslib_1.__makeTemplateObject)(["\n      mutation CreatePullRequest(\n        $id: ID!\n        $base: String!\n        $head: String!\n        $title: String!\n        $body: String!\n      ) {\n        createPullRequest(\n          input: {\n            repositoryId: $id\n            baseRefName: $base\n            headRefName: $head\n            title: $title\n            body: $body\n          }\n        ) {\n          pullRequest {\n            id\n          }\n        }\n      }\n    "], ["\n      mutation CreatePullRequest(\n        $id: ID!\n        $base: String!\n        $head: String!\n        $title: String!\n        $body: String!\n      ) {\n        createPullRequest(\n          input: {\n            repositoryId: $id\n            baseRefName: $base\n            headRefName: $head\n            title: $title\n            body: $body\n          }\n        ) {\n          pullRequest {\n            id\n          }\n        }\n      }\n    "]))), {
+                if (!(searchResult.data.items.length === 0)) return [3 /*break*/, 10];
+                return [4 /*yield*/, octokit.graphql(gql(templateObject_2 || (templateObject_2 = (0, tslib_1.__makeTemplateObject)(["\n        mutation CreatePullRequest(\n          $id: ID!\n          $base: String!\n          $head: String!\n          $title: String!\n          $body: String!\n        ) {\n          createPullRequest(\n            input: {\n              repositoryId: $id\n              baseRefName: $base\n              headRefName: $head\n              title: $title\n              body: $body\n            }\n          ) {\n            pullRequest {\n              id\n            }\n          }\n        }\n      "], ["\n        mutation CreatePullRequest(\n          $id: ID!\n          $base: String!\n          $head: String!\n          $title: String!\n          $body: String!\n        ) {\n          createPullRequest(\n            input: {\n              repositoryId: $id\n              baseRefName: $base\n              headRefName: $head\n              title: $title\n              body: $body\n            }\n          ) {\n            pullRequest {\n              id\n            }\n          }\n        }\n      "]))), {
                         id: info.repository.id,
                         base: branch,
                         head: head,
                         title: 'feat: update master',
                         body: body,
                     })];
-            case 8:
-                // TODO: tag head branch
+            case 9:
                 _a.sent();
-                return [2 /*return*/];
+                return [3 /*break*/, 12];
+            case 10: return [4 /*yield*/, octokit.graphql(gql(templateObject_3 || (templateObject_3 = (0, tslib_1.__makeTemplateObject)(["\n        mutation UpdatePullRequest($id: ID!, $base: String!, $title: String!, $body: String!) {\n          updatePullRequest(\n            input: { pullRequestId: $id, baseRefName: $base, title: $title, body: $body }\n          ) {\n            pullRequest {\n              id\n            }\n          }\n        }\n      "], ["\n        mutation UpdatePullRequest($id: ID!, $base: String!, $title: String!, $body: String!) {\n          updatePullRequest(\n            input: { pullRequestId: $id, baseRefName: $base, title: $title, body: $body }\n          ) {\n            pullRequest {\n              id\n            }\n          }\n        }\n      "]))), {
+                    id: searchResult.data.items[0].number,
+                    base: branch,
+                    title: 'feat: update master',
+                    body: body,
+                })];
+            case 11:
+                _a.sent();
+                _a.label = 12;
+            case 12: return [2 /*return*/];
         }
     });
 }); };
 exports.createPR = createPR;
-var templateObject_1, templateObject_2;
+var templateObject_1, templateObject_2, templateObject_3;
 
 
 /***/ }),

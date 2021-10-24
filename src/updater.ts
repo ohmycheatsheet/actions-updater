@@ -26,6 +26,13 @@ export const createPR = async (owner: string, name: string) => {
   await gitUtils.switchToMaybeExistingBranch(head)
   await gitUtils.reset(github.context.sha)
 
+  const searchQuery = `repo:${owner}/${name}+state:open+head:${head}+base:${branch}`
+  const searchResult = await octokit.rest.search.issuesAndPullRequests({
+    q: searchQuery,
+  })
+
+  console.log(searchResult)
+
   // read from .omcs/source
   update()
   const commitMessage = 'chore: update template'
@@ -38,36 +45,58 @@ export const createPR = async (owner: string, name: string) => {
   // create pr
   const body = readChangelog()
   // TODO: tag head branch
-  await octokit.graphql(
-    gql`
-      mutation CreatePullRequest(
-        $id: ID!
-        $base: String!
-        $head: String!
-        $title: String!
-        $body: String!
-      ) {
-        createPullRequest(
-          input: {
-            repositoryId: $id
-            baseRefName: $base
-            headRefName: $head
-            title: $title
-            body: $body
-          }
+  if (searchResult.data.items.length === 0) {
+    await octokit.graphql(
+      gql`
+        mutation CreatePullRequest(
+          $id: ID!
+          $base: String!
+          $head: String!
+          $title: String!
+          $body: String!
         ) {
-          pullRequest {
-            id
+          createPullRequest(
+            input: {
+              repositoryId: $id
+              baseRefName: $base
+              headRefName: $head
+              title: $title
+              body: $body
+            }
+          ) {
+            pullRequest {
+              id
+            }
           }
         }
-      }
-    `,
-    {
-      id: info.repository.id,
-      base: branch,
-      head,
-      title: 'feat: update master',
-      body,
-    },
-  )
+      `,
+      {
+        id: info.repository.id,
+        base: branch,
+        head,
+        title: 'feat: update master',
+        body,
+      },
+    )
+  } else {
+    await octokit.graphql(
+      gql`
+        mutation UpdatePullRequest($id: ID!, $base: String!, $title: String!, $body: String!) {
+          updatePullRequest(
+            input: { pullRequestId: $id, baseRefName: $base, title: $title, body: $body }
+          ) {
+            pullRequest {
+              id
+            }
+          }
+        }
+      `,
+      {
+        id: searchResult.data.items[0].number,
+        base: branch,
+        title: 'feat: update master',
+        body,
+      },
+    )
+  }
 }
