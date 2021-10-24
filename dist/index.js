@@ -15558,7 +15558,7 @@ var readChangelog = function () {
 };
 exports.readChangelog = readChangelog;
 var shouldUpdate = function () {
-    if (fs_extra_1.default.existsSync(rt('package.json'))) {
+    if (!fs_extra_1.default.existsSync(rt('package.json'))) {
         return true;
     }
     var pkgOfSource = fs_extra_1.default.readJSONSync(rs('package.json'));

@@ -52,7 +52,7 @@ export const readChangelog = () => {
 }
 
 export const shouldUpdate = () => {
-  if (fs.existsSync(rt('package.json'))) {
+  if (!fs.existsSync(rt('package.json'))) {
     return true
   }
   const pkgOfSource = fs.readJSONSync(rs('package.json'))
