@@ -15549,6 +15549,9 @@ var rs = function (pathname) {
     return path_1.default.resolve(process.cwd(), temp, '.omcs/source', pathname);
 };
 var readChangelog = function () {
+    if (!fs_extra_1.default.existsSync(rs('CHANGELOG.md'))) {
+        return 'update cheatsheets template';
+    }
     var changelogOfSource = fs_extra_1.default.readFileSync(rs('CHANGELOG.md')).toString();
     if (!fs_extra_1.default.existsSync(rt('CHANGELOG.md'))) {
         return changelogOfSource;
@@ -15572,7 +15575,9 @@ exports.shouldUpdate = shouldUpdate;
 var update = function () { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
     return (0, tslib_1.__generator)(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, fs_extra_1.default.copy(rs(), rt())];
+            case 0:
+                fs_extra_1.default.removeSync(rs('.git'));
+                return [4 /*yield*/, fs_extra_1.default.copy(rs(), rt())];
             case 1:
                 _a.sent();
                 return [2 /*return*/];

@@ -43,6 +43,9 @@ const rs = (pathname = '') => {
 }
 
 export const readChangelog = () => {
+  if (!fs.existsSync(rs('CHANGELOG.md'))) {
+    return 'update cheatsheets template'
+  }
   const changelogOfSource = fs.readFileSync(rs('CHANGELOG.md')).toString()
   if (!fs.existsSync(rt('CHANGELOG.md'))) {
     return changelogOfSource
@@ -64,5 +67,6 @@ export const shouldUpdate = () => {
 }
 
 export const update = async () => {
+  fs.removeSync(rs('.git'))
   await fs.copy(rs(), rt())
 }
