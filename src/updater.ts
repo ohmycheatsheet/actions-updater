@@ -3,7 +3,7 @@ import * as github from '@actions/github'
 const octokit = github.getOctokit(process.env.GITHUB_TOKEN!)
 const gql = String.raw
 
-export const createPR = async (owner: string, repo: string) => {
+export const createPR = async (owner: string, name: string) => {
   const info: any = await octokit.graphql(
     gql`
       query GetRepoID($name: String!, $owner: String!) {
@@ -13,7 +13,7 @@ export const createPR = async (owner: string, repo: string) => {
       }
     `,
     {
-      repo,
+      name,
       owner,
     },
   )

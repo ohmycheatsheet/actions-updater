@@ -10946,12 +10946,12 @@ var tslib_1 = __nccwpck_require__(1569);
 var github = (0, tslib_1.__importStar)(__nccwpck_require__(8262));
 var octokit = github.getOctokit(process.env.GITHUB_TOKEN);
 var gql = String.raw;
-var createPR = function (owner, repo) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+var createPR = function (owner, name) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
     var info;
     return (0, tslib_1.__generator)(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, octokit.graphql(gql(templateObject_1 || (templateObject_1 = (0, tslib_1.__makeTemplateObject)(["\n      query GetRepoID($name: String!, $owner: String!) {\n        repository(name: $name, owner: $owner) {\n          id\n        }\n      }\n    "], ["\n      query GetRepoID($name: String!, $owner: String!) {\n        repository(name: $name, owner: $owner) {\n          id\n        }\n      }\n    "]))), {
-                    repo: repo,
+                    name: name,
                     owner: owner,
                 })];
             case 1:
