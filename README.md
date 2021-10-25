@@ -37,7 +37,7 @@ jobs:
 Setup environment
 
 1. copy `.env.sample` file
-2. replace `GITHUB_TOKEN`, `ALGOLIA_APPID`, `ALGOLIA_APP_KEY`
+2. replace `GITHUB_TOKEN`
 
 Users shouldn't consume the action from master since that would be latest code and actions can break compatibility between major versions.
 

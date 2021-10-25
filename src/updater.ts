@@ -33,7 +33,7 @@ export const createPR = async (owner: string, name: string) => {
 
   console.log(searchResult)
 
-  // read from .omcs/source
+  // read from SOURCE
   await update()
   const commitMessage = 'chore: update template'
   // project with `commit: true` setting could have already committed files

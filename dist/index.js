@@ -15295,13 +15295,25 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
+/***/ 1005:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.SOURCE = void 0;
+exports.SOURCE = '.omcs/source';
+
+
+/***/ }),
+
 /***/ 1789:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.checkIfClean = exports.commitAll = exports.reset = exports.switchToMaybeExistingBranch = exports.pushTags = exports.push = exports.pullBranch = exports.setupUser = void 0;
+exports.clone = exports.checkIfClean = exports.commitAll = exports.reset = exports.switchToMaybeExistingBranch = exports.pushTags = exports.push = exports.pullBranch = exports.setupUser = void 0;
 var tslib_1 = __nccwpck_require__(1569);
 var exec_1 = __nccwpck_require__(3531);
 var utils_1 = __nccwpck_require__(1725);
@@ -15420,6 +15432,27 @@ var checkIfClean = function () { return (0, tslib_1.__awaiter)(void 0, void 0, v
     });
 }); };
 exports.checkIfClean = checkIfClean;
+var clone = function (branch, source) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+    var stdout;
+    return (0, tslib_1.__generator)(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, (0, utils_1.execWithOutput)('git', [
+                    'clone',
+                    '-b',
+                    branch,
+                    '--single-branch',
+                    '--depth',
+                    '1',
+                    'git@github.com:ohmycheatsheet/cheatsheets.git',
+                    source,
+                ])];
+            case 1:
+                stdout = (_a.sent()).stdout;
+                return [2 /*return*/, !stdout.length];
+        }
+    });
+}); };
+exports.clone = clone;
 
 
 /***/ }),
@@ -15463,10 +15496,10 @@ var createPR = function (owner, name) { return (0, tslib_1.__awaiter)(void 0, vo
             case 4:
                 searchResult = _a.sent();
                 console.log(searchResult);
-                // read from .omcs/source
+                // read from SOURCE
                 return [4 /*yield*/, (0, utils_1.update)()];
             case 5:
-                // read from .omcs/source
+                // read from SOURCE
                 _a.sent();
                 commitMessage = 'chore: update template';
                 return [4 /*yield*/, gitUtils.checkIfClean()];
@@ -15509,12 +15542,14 @@ var templateObject_1;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.update = exports.shouldUpdate = exports.readChangelog = exports.execWithOutput = void 0;
+exports.update = exports.shouldUpdate = exports.readVersion = exports.readChangelog = exports.execWithOutput = void 0;
 var tslib_1 = __nccwpck_require__(1569);
 var exec_1 = __nccwpck_require__(3531);
 var path_1 = (0, tslib_1.__importDefault)(__nccwpck_require__(5622));
 var fs_extra_1 = (0, tslib_1.__importDefault)(__nccwpck_require__(9938));
 var core = (0, tslib_1.__importStar)(__nccwpck_require__(5251));
+var constants_1 = __nccwpck_require__(1005);
+var gitUtils_1 = __nccwpck_require__(1789);
 /**
  * @see {@link https://github.com/changesets/action/blob/master/src/utils.ts}
  */
@@ -15553,7 +15588,7 @@ var rt = function (pathname) {
 var rs = function (pathname) {
     if (pathname === void 0) { pathname = ''; }
     var temp = core.getInput('debug') ? 'update-source' : '';
-    return path_1.default.resolve(process.cwd(), temp, '.omcs/source', pathname);
+    return path_1.default.resolve(process.cwd(), temp, constants_1.SOURCE, pathname);
 };
 var readChangelog = function () {
     if (!fs_extra_1.default.existsSync(rs('CHANGELOG.md'))) {
@@ -15567,6 +15602,15 @@ var readChangelog = function () {
     return changelogOfSource.slice(0, changelogOfSource.length - changelogOfTarget.length);
 };
 exports.readChangelog = readChangelog;
+var readVersion = function () {
+    if (!fs_extra_1.default.existsSync(rt('package.json'))) {
+        return 'master';
+    }
+    var pkg = fs_extra_1.default.readJSONSync(rt('package.json'));
+    var major = pkg.version.split('.')[0];
+    return "v" + major;
+};
+exports.readVersion = readVersion;
 var shouldUpdate = function () {
     if (!fs_extra_1.default.existsSync(rt('package.json'))) {
         return true;
@@ -15580,15 +15624,29 @@ var shouldUpdate = function () {
 };
 exports.shouldUpdate = shouldUpdate;
 var update = function () { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+    var version;
     return (0, tslib_1.__generator)(this, function (_a) {
         switch (_a.label) {
             case 0:
-                fs_extra_1.default.removeSync(rs('.git'));
-                return [4 /*yield*/, fs_extra_1.default.copy(rs(), rt())];
+                version = (0, exports.readVersion)();
+                return [4 /*yield*/, (0, gitUtils_1.clone)(version, rs())
+                    // no git submodules
+                ];
             case 1:
                 _a.sent();
-                return [4 /*yield*/, fs_extra_1.default.remove(rs())];
+                // no git submodules
+                fs_extra_1.default.removeSync(rs('.git'));
+                // copy from SOURCE
+                return [4 /*yield*/, fs_extra_1.default.copy(rs(), rt())
+                    // clean up SOURCE
+                ];
             case 2:
+                // copy from SOURCE
+                _a.sent();
+                // clean up SOURCE
+                return [4 /*yield*/, fs_extra_1.default.remove(rs())];
+            case 3:
+                // clean up SOURCE
                 _a.sent();
                 return [2 /*return*/];
         }

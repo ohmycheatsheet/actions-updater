@@ -1,4 +1,5 @@
 import { exec } from '@actions/exec'
+
 import { execWithOutput } from './utils'
 
 export const setupUser = async () => {
@@ -47,5 +48,19 @@ export const commitAll = async (message: string) => {
 
 export const checkIfClean = async (): Promise<boolean> => {
   const { stdout } = await execWithOutput('git', ['status', '--porcelain'])
+  return !stdout.length
+}
+
+export const clone = async (branch: string, source: string) => {
+  const { stdout } = await execWithOutput('git', [
+    'clone',
+    '-b',
+    branch,
+    '--single-branch',
+    '--depth',
+    '1',
+    'git@github.com:ohmycheatsheet/cheatsheets.git',
+    source,
+  ])
   return !stdout.length
 }

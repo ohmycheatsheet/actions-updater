@@ -8,3 +8,4 @@ export declare const switchToMaybeExistingBranch: (branch: string) => Promise<vo
 export declare const reset: (pathSpec: string, mode?: 'hard' | 'soft' | 'mixed') => Promise<void>;
 export declare const commitAll: (message: string) => Promise<void>;
 export declare const checkIfClean: () => Promise<boolean>;
+export declare const clone: (branch: string, source: string) => Promise<boolean>;
