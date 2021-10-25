@@ -5,7 +5,6 @@ import fs from 'fs-extra'
 import * as core from '@actions/core'
 
 import { SOURCE } from './constants'
-import { clone } from './gitUtils'
 
 /**
  * @see {@link https://github.com/changesets/action/blob/master/src/utils.ts}
@@ -36,7 +35,7 @@ export async function execWithOutput(
   }
 }
 
-const rt = (pathname = '') => {
+export const rt = (pathname = '') => {
   const temp = core.getInput('debug') ? 'update-source' : ''
   return path.resolve(process.cwd(), temp, pathname)
 }
@@ -67,7 +66,7 @@ export const readVersion = () => {
   return `v${major}`
 }
 
-const DEFAULT_REPO = 'ohmycheatsheet/cheatsheets'
+export const DEFAULT_REPO = 'ohmycheatsheet/cheatsheets'
 
 export const shouldUpdate = () => {
   if (
@@ -87,19 +86,4 @@ export const shouldUpdate = () => {
     return false
   }
   return true
-}
-
-export const update = async () => {
-  const version = readVersion()
-  await clone({
-    branch: version,
-    folder: rs(),
-    repo: core.getInput('repo') || DEFAULT_REPO,
-  })
-  // no git submodules
-  fs.removeSync(rs('.git'))
-  // copy from SOURCE
-  await fs.copy(rs(), rt())
-  // clean up SOURCE
-  await fs.remove(rs())
 }

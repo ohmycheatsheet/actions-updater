@@ -12962,20 +12962,15 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createPR = void 0;
 var tslib_1 = __nccwpck_require__(1569);
 var github = (0, tslib_1.__importStar)(__nccwpck_require__(8262));
+var core = (0, tslib_1.__importStar)(__nccwpck_require__(5251));
 var exec_1 = __nccwpck_require__(3531);
+var fs_extra_1 = (0, tslib_1.__importDefault)(__nccwpck_require__(9938));
 var gitUtils = (0, tslib_1.__importStar)(__nccwpck_require__(1789));
 var utils_1 = __nccwpck_require__(1725);
 var octokit = github.getOctokit(process.env.GITHUB_TOKEN);
 var gql = String.raw;
-var delay = function () {
-    return new Promise(function (resolve) {
-        setTimeout(function () {
-            return resolve(true);
-        }, 10000);
-    });
-};
 var createPR = function (owner, name) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
-    var info, branch, head, searchQuery, searchResult, commitMessage, finalCommitMessage, body;
+    var info, branch, head, searchQuery, searchResult, version, commitMessage, finalCommitMessage, body;
     return (0, tslib_1.__generator)(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, octokit.graphql(gql(templateObject_1 || (templateObject_1 = (0, tslib_1.__makeTemplateObject)(["\n      query GetRepoID($owner: String!, $name: String!) {\n        repository(owner: $owner, name: $name) {\n          id\n        }\n      }\n    "], ["\n      query GetRepoID($owner: String!, $name: String!) {\n        repository(owner: $owner, name: $name) {\n          id\n        }\n      }\n    "]))), {
@@ -13000,46 +12995,66 @@ var createPR = function (owner, name) { return (0, tslib_1.__awaiter)(void 0, vo
             case 4:
                 searchResult = _a.sent();
                 console.log(searchResult);
-                // read from SOURCE
-                return [4 /*yield*/, (0, utils_1.update)()];
+                version = (0, utils_1.readVersion)();
+                return [4 /*yield*/, gitUtils.clone({
+                        branch: version,
+                        folder: (0, utils_1.rs)(),
+                        repo: core.getInput('repo') || utils_1.DEFAULT_REPO,
+                    })];
             case 5:
-                // read from SOURCE
                 _a.sent();
-                return [4 /*yield*/, delay()];
+                if (!!(0, utils_1.shouldUpdate)()) return [3 /*break*/, 7];
+                return [4 /*yield*/, fs_extra_1.default.remove((0, utils_1.rs)())];
             case 6:
                 _a.sent();
-                return [4 /*yield*/, (0, exec_1.exec)('ls', [], { cwd: (0, utils_1.rs)() })];
-            case 7:
+                return [2 /*return*/];
+            case 7: return [4 /*yield*/, (0, exec_1.exec)('ls', [], { cwd: (0, utils_1.rs)() })
+                // no git submodules
+            ];
+            case 8:
                 _a.sent();
-                if (!(0, utils_1.shouldUpdate)()) {
-                    return [2 /*return*/];
-                }
+                // no git submodules
+                fs_extra_1.default.removeSync((0, utils_1.rs)('.git'));
+                // copy from SOURCE
+                return [4 /*yield*/, fs_extra_1.default.copy((0, utils_1.rs)(), (0, utils_1.rt)())
+                    // clean up SOURCE
+                ];
+            case 9:
+                // copy from SOURCE
+                _a.sent();
+                // clean up SOURCE
+                return [4 /*yield*/, fs_extra_1.default.remove((0, utils_1.rs)())
+                    // create pr
+                ];
+            case 10:
+                // clean up SOURCE
+                _a.sent();
                 commitMessage = 'chore: update template';
                 return [4 /*yield*/, gitUtils.checkIfClean()];
-            case 8:
-                if (!!(_a.sent())) return [3 /*break*/, 10];
+            case 11:
+                if (!!(_a.sent())) return [3 /*break*/, 13];
                 finalCommitMessage = "" + commitMessage;
                 return [4 /*yield*/, gitUtils.commitAll(finalCommitMessage)];
-            case 9:
-                _a.sent();
-                _a.label = 10;
-            case 10: return [4 /*yield*/, gitUtils.push(head, { force: true })
-                // create pr
-            ];
-            case 11:
-                _a.sent();
-                body = (0, utils_1.readChangelog)();
-                if (!(searchResult.data.items.length === 0)) return [3 /*break*/, 13];
-                return [4 /*yield*/, octokit.rest.pulls.create((0, tslib_1.__assign)({ base: branch, head: head, title: 'feat: update template', body: body }, github.context.repo))];
             case 12:
                 _a.sent();
-                return [3 /*break*/, 15];
-            case 13: return [4 /*yield*/, octokit.rest.pulls.update((0, tslib_1.__assign)({ pull_number: searchResult.data.items[0].number, title: 'feat: update template', body: body }, github.context.repo))];
+                _a.label = 13;
+            case 13: return [4 /*yield*/, gitUtils.push(head, { force: true })
+                // create pr
+            ];
             case 14:
                 _a.sent();
+                body = (0, utils_1.readChangelog)();
+                if (!(searchResult.data.items.length === 0)) return [3 /*break*/, 16];
+                return [4 /*yield*/, octokit.rest.pulls.create((0, tslib_1.__assign)({ base: branch, head: head, title: 'feat: update template', body: body }, github.context.repo))];
+            case 15:
+                _a.sent();
+                return [3 /*break*/, 18];
+            case 16: return [4 /*yield*/, octokit.rest.pulls.update((0, tslib_1.__assign)({ pull_number: searchResult.data.items[0].number, title: 'feat: update template', body: body }, github.context.repo))];
+            case 17:
+                _a.sent();
                 console.log('pull request found');
-                _a.label = 15;
-            case 15: return [2 /*return*/];
+                _a.label = 18;
+            case 18: return [2 /*return*/];
         }
     });
 }); };
@@ -13055,7 +13070,7 @@ var templateObject_1;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.update = exports.shouldUpdate = exports.readVersion = exports.readChangelog = exports.rs = exports.execWithOutput = void 0;
+exports.shouldUpdate = exports.DEFAULT_REPO = exports.readVersion = exports.readChangelog = exports.rs = exports.rt = exports.execWithOutput = void 0;
 var tslib_1 = __nccwpck_require__(1569);
 var exec_1 = __nccwpck_require__(3531);
 var github = (0, tslib_1.__importStar)(__nccwpck_require__(8262));
@@ -13063,7 +13078,6 @@ var path_1 = (0, tslib_1.__importDefault)(__nccwpck_require__(5622));
 var fs_extra_1 = (0, tslib_1.__importDefault)(__nccwpck_require__(9938));
 var core = (0, tslib_1.__importStar)(__nccwpck_require__(5251));
 var constants_1 = __nccwpck_require__(1005);
-var gitUtils_1 = __nccwpck_require__(1789);
 /**
  * @see {@link https://github.com/changesets/action/blob/master/src/utils.ts}
  */
@@ -13099,6 +13113,7 @@ var rt = function (pathname) {
     var temp = core.getInput('debug') ? 'update-source' : '';
     return path_1.default.resolve(process.cwd(), temp, pathname);
 };
+exports.rt = rt;
 var rs = function (pathname) {
     if (pathname === void 0) { pathname = ''; }
     var temp = core.getInput('debug') ? 'update-source' : '';
@@ -13110,34 +13125,34 @@ var readChangelog = function () {
         return 'update cheatsheets template';
     }
     var changelogOfSource = fs_extra_1.default.readFileSync((0, exports.rs)('CHANGELOG.md')).toString();
-    if (!fs_extra_1.default.existsSync(rt('CHANGELOG.md'))) {
+    if (!fs_extra_1.default.existsSync((0, exports.rt)('CHANGELOG.md'))) {
         return changelogOfSource;
     }
-    var changelogOfTarget = fs_extra_1.default.readFileSync(rt('CHANGELOG.md')).toString();
+    var changelogOfTarget = fs_extra_1.default.readFileSync((0, exports.rt)('CHANGELOG.md')).toString();
     return changelogOfSource.slice(0, changelogOfSource.length - changelogOfTarget.length);
 };
 exports.readChangelog = readChangelog;
 var readVersion = function () {
-    if (!fs_extra_1.default.existsSync(rt('package.json'))) {
+    if (!fs_extra_1.default.existsSync((0, exports.rt)('package.json'))) {
         return 'v1';
     }
-    var pkg = fs_extra_1.default.readJSONSync(rt('package.json'));
+    var pkg = fs_extra_1.default.readJSONSync((0, exports.rt)('package.json'));
     var major = pkg.version.split('.')[0];
     return "v" + major;
 };
 exports.readVersion = readVersion;
-var DEFAULT_REPO = 'ohmycheatsheet/cheatsheets';
+exports.DEFAULT_REPO = 'ohmycheatsheet/cheatsheets';
 var shouldUpdate = function () {
     if (core.getInput('repo') === github.context.repo.owner + "/" + github.context.repo.repo ||
-        github.context.repo.owner + "/" + github.context.repo.repo === DEFAULT_REPO) {
+        github.context.repo.owner + "/" + github.context.repo.repo === exports.DEFAULT_REPO) {
         console.log('skip', 'self update is not allowed');
         return false;
     }
-    if (!fs_extra_1.default.existsSync(rt('package.json'))) {
+    if (!fs_extra_1.default.existsSync((0, exports.rt)('package.json'))) {
         return true;
     }
     var pkgOfSource = fs_extra_1.default.readJSONSync((0, exports.rs)('package.json'));
-    var pkgOfTarget = fs_extra_1.default.readJSONSync(rt('package.json'));
+    var pkgOfTarget = fs_extra_1.default.readJSONSync((0, exports.rt)('package.json'));
     if (pkgOfSource.version === pkgOfTarget.version) {
         core.setOutput('skip', 'same version detected');
         return false;
@@ -13145,40 +13160,6 @@ var shouldUpdate = function () {
     return true;
 };
 exports.shouldUpdate = shouldUpdate;
-var update = function () { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
-    var version;
-    return (0, tslib_1.__generator)(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                version = (0, exports.readVersion)();
-                return [4 /*yield*/, (0, gitUtils_1.clone)({
-                        branch: version,
-                        folder: (0, exports.rs)(),
-                        repo: core.getInput('repo') || DEFAULT_REPO,
-                    })
-                    // no git submodules
-                ];
-            case 1:
-                _a.sent();
-                // no git submodules
-                fs_extra_1.default.removeSync((0, exports.rs)('.git'));
-                // copy from SOURCE
-                return [4 /*yield*/, fs_extra_1.default.copy((0, exports.rs)(), rt())
-                    // clean up SOURCE
-                ];
-            case 2:
-                // copy from SOURCE
-                _a.sent();
-                // clean up SOURCE
-                return [4 /*yield*/, fs_extra_1.default.remove((0, exports.rs)())];
-            case 3:
-                // clean up SOURCE
-                _a.sent();
-                return [2 /*return*/];
-        }
-    });
-}); };
-exports.update = update;
 
 
 /***/ }),

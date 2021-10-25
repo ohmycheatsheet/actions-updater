@@ -1,21 +1,16 @@
 import * as github from '@actions/github'
+import * as core from '@actions/core'
 import { exec } from '@actions/exec'
+import fs from 'fs-extra'
 
 import * as gitUtils from './gitUtils'
-import { readChangelog, rs, shouldUpdate, update } from './utils'
+import { readChangelog, readVersion, rs, rt, shouldUpdate, DEFAULT_REPO } from './utils'
 
 const octokit = github.getOctokit(process.env.GITHUB_TOKEN!)
 const gql = String.raw
 
-const delay = () => {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      return resolve(true)
-    }, 10000)
-  })
-}
-
 export const createPR = async (owner: string, name: string) => {
+  // repo info
   const info: any = await octokit.graphql(
     gql`
       query GetRepoID($owner: String!, $name: String!) {
@@ -42,13 +37,26 @@ export const createPR = async (owner: string, name: string) => {
 
   console.log(searchResult)
 
-  // read from SOURCE
-  await update()
-  await delay()
-  await exec('ls', [], { cwd: rs() })
+  // update from SOURCE
+  const version = readVersion()
+  await gitUtils.clone({
+    branch: version,
+    folder: rs(),
+    repo: core.getInput('repo') || DEFAULT_REPO,
+  })
   if (!shouldUpdate()) {
+    await fs.remove(rs())
     return
   }
+  await exec('ls', [], { cwd: rs() })
+  // no git submodules
+  fs.removeSync(rs('.git'))
+  // copy from SOURCE
+  await fs.copy(rs(), rt())
+  // clean up SOURCE
+  await fs.remove(rs())
+
+  // create pr
   const commitMessage = 'chore: update template'
   // project with `commit: true` setting could have already committed files
   if (!(await gitUtils.checkIfClean())) {
