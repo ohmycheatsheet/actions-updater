@@ -12968,31 +12968,24 @@ var fs_extra_1 = (0, tslib_1.__importDefault)(__nccwpck_require__(9938));
 var gitUtils = (0, tslib_1.__importStar)(__nccwpck_require__(1789));
 var utils_1 = __nccwpck_require__(1725);
 var octokit = github.getOctokit(process.env.GITHUB_TOKEN);
-var gql = String.raw;
 var createPR = function (owner, name) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
-    var info, branch, head, searchQuery, searchResult, version, commitMessage, finalCommitMessage, body;
+    var branch, head, searchQuery, searchResult, version, commitMessage, finalCommitMessage, body;
     return (0, tslib_1.__generator)(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, octokit.graphql(gql(templateObject_1 || (templateObject_1 = (0, tslib_1.__makeTemplateObject)(["\n      query GetRepoID($owner: String!, $name: String!) {\n        repository(owner: $owner, name: $name) {\n          id\n        }\n      }\n    "], ["\n      query GetRepoID($owner: String!, $name: String!) {\n        repository(owner: $owner, name: $name) {\n          id\n        }\n      }\n    "]))), {
-                    owner: owner,
-                    name: name,
-                })];
-            case 1:
-                info = _a.sent();
-                console.log(info);
+            case 0:
                 branch = github.context.ref.replace('refs/heads/', '');
                 head = 'omcs/latest';
                 return [4 /*yield*/, gitUtils.switchToMaybeExistingBranch(head)];
-            case 2:
+            case 1:
                 _a.sent();
                 return [4 /*yield*/, gitUtils.reset(github.context.sha)];
-            case 3:
+            case 2:
                 _a.sent();
                 searchQuery = "repo:" + owner + "/" + name + "+state:open+head:" + head + "+base:" + branch;
                 return [4 /*yield*/, octokit.rest.search.issuesAndPullRequests({
                         q: searchQuery,
                     })];
-            case 4:
+            case 3:
                 searchResult = _a.sent();
                 console.log(searchResult);
                 version = (0, utils_1.readVersion)();
@@ -13001,17 +12994,17 @@ var createPR = function (owner, name) { return (0, tslib_1.__awaiter)(void 0, vo
                         folder: (0, utils_1.rs)(),
                         repo: core.getInput('repo') || utils_1.DEFAULT_REPO,
                     })];
+            case 4:
+                _a.sent();
+                if (!!(0, utils_1.shouldUpdate)()) return [3 /*break*/, 6];
+                return [4 /*yield*/, fs_extra_1.default.remove((0, utils_1.rs)())];
             case 5:
                 _a.sent();
-                if (!!(0, utils_1.shouldUpdate)()) return [3 /*break*/, 7];
-                return [4 /*yield*/, fs_extra_1.default.remove((0, utils_1.rs)())];
-            case 6:
-                _a.sent();
                 return [2 /*return*/];
-            case 7: return [4 /*yield*/, (0, exec_1.exec)('ls', [], { cwd: (0, utils_1.rs)() })
+            case 6: return [4 /*yield*/, (0, exec_1.exec)('ls', [], { cwd: (0, utils_1.rs)() })
                 // no git submodules
             ];
-            case 8:
+            case 7:
                 _a.sent();
                 // no git submodules
                 fs_extra_1.default.removeSync((0, utils_1.rs)('.git'));
@@ -13019,47 +13012,46 @@ var createPR = function (owner, name) { return (0, tslib_1.__awaiter)(void 0, vo
                 return [4 /*yield*/, fs_extra_1.default.copy((0, utils_1.rs)(), (0, utils_1.rt)())
                     // clean up SOURCE
                 ];
-            case 9:
+            case 8:
                 // copy from SOURCE
                 _a.sent();
                 // clean up SOURCE
                 return [4 /*yield*/, fs_extra_1.default.remove((0, utils_1.rs)())
                     // create pr
                 ];
-            case 10:
+            case 9:
                 // clean up SOURCE
                 _a.sent();
                 commitMessage = 'chore: update template';
                 return [4 /*yield*/, gitUtils.checkIfClean()];
-            case 11:
-                if (!!(_a.sent())) return [3 /*break*/, 13];
+            case 10:
+                if (!!(_a.sent())) return [3 /*break*/, 12];
                 finalCommitMessage = "" + commitMessage;
                 return [4 /*yield*/, gitUtils.commitAll(finalCommitMessage)];
-            case 12:
+            case 11:
                 _a.sent();
-                _a.label = 13;
-            case 13: return [4 /*yield*/, gitUtils.push(head, { force: true })
+                _a.label = 12;
+            case 12: return [4 /*yield*/, gitUtils.push(head, { force: true })
                 // create pr
             ];
-            case 14:
+            case 13:
                 _a.sent();
                 body = (0, utils_1.readChangelog)();
-                if (!(searchResult.data.items.length === 0)) return [3 /*break*/, 16];
+                if (!(searchResult.data.items.length === 0)) return [3 /*break*/, 15];
                 return [4 /*yield*/, octokit.rest.pulls.create((0, tslib_1.__assign)({ base: branch, head: head, title: 'feat: update template', body: body }, github.context.repo))];
-            case 15:
+            case 14:
                 _a.sent();
-                return [3 /*break*/, 18];
-            case 16: return [4 /*yield*/, octokit.rest.pulls.update((0, tslib_1.__assign)({ pull_number: searchResult.data.items[0].number, title: 'feat: update template', body: body }, github.context.repo))];
-            case 17:
+                return [3 /*break*/, 17];
+            case 15: return [4 /*yield*/, octokit.rest.pulls.update((0, tslib_1.__assign)({ pull_number: searchResult.data.items[0].number, title: 'feat: update template', body: body }, github.context.repo))];
+            case 16:
                 _a.sent();
                 console.log('pull request found');
-                _a.label = 18;
-            case 18: return [2 /*return*/];
+                _a.label = 17;
+            case 17: return [2 /*return*/];
         }
     });
 }); };
 exports.createPR = createPR;
-var templateObject_1;
 
 
 /***/ }),

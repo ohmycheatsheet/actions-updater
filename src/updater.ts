@@ -7,24 +7,9 @@ import * as gitUtils from './gitUtils'
 import { readChangelog, readVersion, rs, rt, shouldUpdate, DEFAULT_REPO } from './utils'
 
 const octokit = github.getOctokit(process.env.GITHUB_TOKEN!)
-const gql = String.raw
 
 export const createPR = async (owner: string, name: string) => {
   // repo info
-  const info: any = await octokit.graphql(
-    gql`
-      query GetRepoID($owner: String!, $name: String!) {
-        repository(owner: $owner, name: $name) {
-          id
-        }
-      }
-    `,
-    {
-      owner,
-      name,
-    },
-  )
-  console.log(info)
   const branch = github.context.ref.replace('refs/heads/', '')
   const head = 'omcs/latest'
   await gitUtils.switchToMaybeExistingBranch(head)
