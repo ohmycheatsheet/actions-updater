@@ -15550,6 +15550,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.update = exports.shouldUpdate = exports.readVersion = exports.readChangelog = exports.execWithOutput = void 0;
 var tslib_1 = __nccwpck_require__(1569);
 var exec_1 = __nccwpck_require__(3531);
+var github = (0, tslib_1.__importStar)(__nccwpck_require__(8262));
 var path_1 = (0, tslib_1.__importDefault)(__nccwpck_require__(5622));
 var fs_extra_1 = (0, tslib_1.__importDefault)(__nccwpck_require__(9938));
 var core = (0, tslib_1.__importStar)(__nccwpck_require__(5251));
@@ -15616,8 +15617,14 @@ var readVersion = function () {
     return "v" + major;
 };
 exports.readVersion = readVersion;
+var DEFAULT_REPO = 'ohmycheatsheet/cheatsheets';
 var shouldUpdate = function () {
+    if (core.getInput('repo') === github.context.repo.owner + "/" + github.context.repo.repo || github.context.repo.owner + "/" + github.context.repo.repo === DEFAULT_REPO) {
+        console.log('skip', 'self update is not allowed');
+        return false;
+    }
     if (!fs_extra_1.default.existsSync(rt('package.json'))) {
+        core.setOutput('skip', 'same version detected');
         return true;
     }
     var pkgOfSource = fs_extra_1.default.readJSONSync(rs('package.json'));
@@ -15637,7 +15644,7 @@ var update = function () { return (0, tslib_1.__awaiter)(void 0, void 0, void 0,
                 return [4 /*yield*/, (0, gitUtils_1.clone)({
                         branch: version,
                         folder: rs(),
-                        repo: core.getInput('repo') || 'ohmycheatsheet/cheatsheets',
+                        repo: core.getInput('repo') || DEFAULT_REPO,
                     })
                     // no git submodules
                 ];
@@ -15899,7 +15906,6 @@ function run() {
                     stdout = (_a.sent()).stdout;
                     console.log(stdout, repo);
                     if (!(0, utils_1.shouldUpdate)()) {
-                        core.setOutput('skip', 'same version detected');
                         return [2 /*return*/];
                     }
                     return [4 /*yield*/, (0, gitUtils_1.setupUser)()];

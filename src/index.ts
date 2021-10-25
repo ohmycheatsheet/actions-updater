@@ -13,7 +13,6 @@ async function run() {
     const { stdout } = await execa('ls')
     console.log(stdout, repo)
     if (!shouldUpdate()) {
-      core.setOutput('skip', 'same version detected')
       return
     }
     await setupUser()
