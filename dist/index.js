@@ -15443,7 +15443,7 @@ var clone = function (branch, source) { return (0, tslib_1.__awaiter)(void 0, vo
                     '--single-branch',
                     '--depth',
                     '1',
-                    'git@github.com:ohmycheatsheet/cheatsheets.git',
+                    'https://github.com/ohmycheatsheet/cheatsheets.git',
                     source,
                 ])];
             case 1:
@@ -15604,7 +15604,7 @@ var readChangelog = function () {
 exports.readChangelog = readChangelog;
 var readVersion = function () {
     if (!fs_extra_1.default.existsSync(rt('package.json'))) {
-        return 'master';
+        return 'v1';
     }
     var pkg = fs_extra_1.default.readJSONSync(rt('package.json'));
     var major = pkg.version.split('.')[0];

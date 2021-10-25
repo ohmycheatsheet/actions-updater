@@ -59,7 +59,7 @@ export const clone = async (branch: string, source: string) => {
     '--single-branch',
     '--depth',
     '1',
-    'git@github.com:ohmycheatsheet/cheatsheets.git',
+    'https://github.com/ohmycheatsheet/cheatsheets.git',
     source,
   ])
   return !stdout.length

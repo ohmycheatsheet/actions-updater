@@ -59,7 +59,7 @@ export const readChangelog = () => {
 
 export const readVersion = () => {
   if (!fs.existsSync(rt('package.json'))) {
-    return 'master'
+    return 'v1'
   }
   const pkg = fs.readJSONSync(rt('package.json'))
   const major = pkg.version.split('.')[0]
