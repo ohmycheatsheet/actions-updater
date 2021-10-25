@@ -1,5 +1,5 @@
 # @omcs/actions-updater
-*🚧 fetch remote repo and update target repo*
+*fetch remote source repo and update current repo*
 
 [![npm](https://img.shields.io/github/package-json/v/ohmycheatsheet/actions-updater)](https://github.com/ohmycheatsheet/actions-updater) [![GitHub](https://img.shields.io/github/license/ohmycheatsheet/actions-updater)](https://github.com/ohmycheatsheet/actions-updater)
 
@@ -30,7 +30,8 @@ jobs:
 
 |name|description|type|required|
 |:---:|:---:|:---:|:---|
-|GITHUB_TOKEN|fetch github issues|string|true|
+|repo|(input)source repo|string|false|
+|GITHUB_TOKEN|(env) create/update pr|string|true|
 
 ## development
 
@@ -45,7 +46,7 @@ Checkin to the v1 release branch
 
 ```yml
 pnpm
-pnpm run build
+pnpm run prepare
 ga .
 gpsup
 ```
