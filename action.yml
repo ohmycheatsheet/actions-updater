@@ -1,6 +1,9 @@
 name: 'cheatsheets-updater'
 description: 'update latest cheatsheet template'
 inputs:
+  repo:
+    required: false
+    description: 'source template repo'
   debug:
     required: false
     description: 'debug flag'

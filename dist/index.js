@@ -15432,26 +15432,31 @@ var checkIfClean = function () { return (0, tslib_1.__awaiter)(void 0, void 0, v
     });
 }); };
 exports.checkIfClean = checkIfClean;
-var clone = function (branch, source) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
-    var stdout;
-    return (0, tslib_1.__generator)(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, (0, utils_1.execWithOutput)('git', [
-                    'clone',
-                    '-b',
-                    branch,
-                    '--single-branch',
-                    '--depth',
-                    '1',
-                    'https://github.com/ohmycheatsheet/cheatsheets.git',
-                    source,
-                ])];
-            case 1:
-                stdout = (_a.sent()).stdout;
-                return [2 /*return*/, !stdout.length];
-        }
+var clone = function (_a) {
+    var repo = _a.repo, branch = _a.branch, folder = _a.folder;
+    return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
+        var stdout;
+        return (0, tslib_1.__generator)(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    console.log(repo);
+                    return [4 /*yield*/, (0, utils_1.execWithOutput)('git', [
+                            'clone',
+                            '-b',
+                            branch,
+                            '--single-branch',
+                            '--depth',
+                            '1',
+                            "https://github.com/" + repo + ".git",
+                            folder,
+                        ])];
+                case 1:
+                    stdout = (_b.sent()).stdout;
+                    return [2 /*return*/, !stdout.length];
+            }
+        });
     });
-}); };
+};
 exports.clone = clone;
 
 
@@ -15629,7 +15634,11 @@ var update = function () { return (0, tslib_1.__awaiter)(void 0, void 0, void 0,
         switch (_a.label) {
             case 0:
                 version = (0, exports.readVersion)();
-                return [4 /*yield*/, (0, gitUtils_1.clone)(version, rs())
+                return [4 /*yield*/, (0, gitUtils_1.clone)({
+                        branch: version,
+                        folder: rs(),
+                        repo: core.getInput('repo') || 'ohmycheatsheet/cheatsheets',
+                    })
                     // no git submodules
                 ];
             case 1:

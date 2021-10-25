@@ -80,7 +80,11 @@ export const shouldUpdate = () => {
 
 export const update = async () => {
   const version = readVersion()
-  await clone(version, rs())
+  await clone({
+    branch: version,
+    folder: rs(),
+    repo: core.getInput('repo') || 'ohmycheatsheet/cheatsheets',
+  })
   // no git submodules
   fs.removeSync(rs('.git'))
   // copy from SOURCE

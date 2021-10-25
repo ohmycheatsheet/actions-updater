@@ -51,7 +51,16 @@ export const checkIfClean = async (): Promise<boolean> => {
   return !stdout.length
 }
 
-export const clone = async (branch: string, source: string) => {
+export const clone = async ({
+  repo,
+  branch,
+  folder,
+}: {
+  branch: string
+  folder: string
+  repo: string
+}) => {
+  console.log(repo)
   const { stdout } = await execWithOutput('git', [
     'clone',
     '-b',
@@ -59,8 +68,8 @@ export const clone = async (branch: string, source: string) => {
     '--single-branch',
     '--depth',
     '1',
-    'https://github.com/ohmycheatsheet/cheatsheets.git',
-    source,
+    `https://github.com/${repo}.git`,
+    folder,
   ])
   return !stdout.length
 }
