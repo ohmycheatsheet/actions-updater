@@ -60,7 +60,6 @@ export const clone = async ({
   folder: string
   repo: string
 }) => {
-  console.log(repo)
   const { stdout } = await execWithOutput('git', [
     'clone',
     '-b',

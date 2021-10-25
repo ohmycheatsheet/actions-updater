@@ -1,10 +1,19 @@
 import * as github from '@actions/github'
+import { exec } from '@actions/exec'
 
 import * as gitUtils from './gitUtils'
-import { readChangelog, update } from './utils'
+import { readChangelog, rs, shouldUpdate, update } from './utils'
 
 const octokit = github.getOctokit(process.env.GITHUB_TOKEN!)
 const gql = String.raw
+
+const delay = () => {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      return resolve(true)
+    }, 10000)
+  })
+}
 
 export const createPR = async (owner: string, name: string) => {
   const info: any = await octokit.graphql(
@@ -35,6 +44,11 @@ export const createPR = async (owner: string, name: string) => {
 
   // read from SOURCE
   await update()
+  await delay()
+  await exec('ls', [], { cwd: rs() })
+  if (!shouldUpdate()) {
+    return
+  }
   const commitMessage = 'chore: update template'
   // project with `commit: true` setting could have already committed files
   if (!(await gitUtils.checkIfClean())) {

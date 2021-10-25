@@ -41,7 +41,7 @@ const rt = (pathname = '') => {
   return path.resolve(process.cwd(), temp, pathname)
 }
 
-const rs = (pathname = '') => {
+export const rs = (pathname = '') => {
   const temp = core.getInput('debug') ? 'update-source' : ''
   return path.resolve(process.cwd(), temp, SOURCE, pathname)
 }
@@ -78,12 +78,12 @@ export const shouldUpdate = () => {
     return false
   }
   if (!fs.existsSync(rt('package.json'))) {
-    core.setOutput('skip', 'same version detected')
     return true
   }
   const pkgOfSource = fs.readJSONSync(rs('package.json'))
   const pkgOfTarget = fs.readJSONSync(rt('package.json'))
   if (pkgOfSource.version === pkgOfTarget.version) {
+    core.setOutput('skip', 'same version detected')
     return false
   }
   return true

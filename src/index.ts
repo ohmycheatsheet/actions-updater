@@ -1,20 +1,12 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
-import execa from 'execa'
 
 import { createPR } from './updater'
 import { setupUser } from './gitUtils'
-import { shouldUpdate } from './utils'
 
 async function run() {
   try {
     const { repo } = github.context
-    // create pull request
-    const { stdout } = await execa('ls')
-    console.log(stdout, repo)
-    if (!shouldUpdate()) {
-      return
-    }
     await setupUser()
     await createPR(repo.owner, repo.repo)
   } catch (error) {

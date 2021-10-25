@@ -9,6 +9,7 @@ export declare function execWithOutput(command: string, args?: string[], options
     stdout: string;
     stderr: string;
 }>;
+export declare const rs: (pathname?: string) => string;
 export declare const readChangelog: () => string;
 export declare const readVersion: () => string;
 export declare const shouldUpdate: () => boolean;
