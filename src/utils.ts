@@ -4,6 +4,7 @@ import path from 'path'
 import fs from 'fs-extra'
 import globby from 'globby'
 import difference from 'lodash.difference'
+import intersection from 'lodash.intersection'
 import ignores from '@aiou/eslint-ignore'
 import * as core from '@actions/core'
 
@@ -114,10 +115,11 @@ export const update = async () => {
   })
   const adds = difference(sources, targets)
   const dels = difference(targets, sources)
+  const updates = intersection(sources, targets)
   for (const file of dels) {
     await fs.remove(rt(file))
   }
-  for (const file of adds) {
+  for (const file of adds.concat(updates)) {
     await fs.copy(rs(file), rt(file))
   }
 }
