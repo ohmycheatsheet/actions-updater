@@ -3,6 +3,11 @@
 
 [![npm](https://img.shields.io/github/package-json/v/ohmycheatsheet/actions-updater)](https://github.com/ohmycheatsheet/actions-updater) [![GitHub](https://img.shields.io/github/license/ohmycheatsheet/actions-updater)](https://github.com/ohmycheatsheet/actions-updater)
 
+
+## features
+
+- In default, if `current/a.file` not exit in `source`, `a.file` will be deleted.
+
 ## usage
 
 1. create file `updater.yml` in `.github/workflows`
