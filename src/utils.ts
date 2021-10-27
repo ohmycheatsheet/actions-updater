@@ -114,7 +114,6 @@ export const update = async () => {
   })
   const adds = difference(sources, targets)
   const dels = difference(targets, sources)
-  console.log(adds, dels)
   for (const file of dels) {
     await fs.remove(rt(file))
   }

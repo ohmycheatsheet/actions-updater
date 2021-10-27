@@ -22449,7 +22449,6 @@ var update = function () { return (0, tslib_1.__awaiter)(void 0, void 0, void 0,
                 targets = _b.sent();
                 adds = (0, lodash_difference_1.default)(sources, targets);
                 dels = (0, lodash_difference_1.default)(targets, sources);
-                console.log(adds, dels);
                 _i = 0, dels_1 = dels;
                 _b.label = 3;
             case 3:
