@@ -4,7 +4,8 @@ specifiers:
   '@actions/core': ^1.5.0
   '@actions/exec': ^1.1.0
   '@actions/github': ^5.0.0
-  '@aiou/eslint-config': ^0.2.2
+  '@aiou/eslint-config': ^0.2.3
+  '@aiou/eslint-ignore': ^0.1.2
   '@changesets/cli': ^2.17.0
   '@jest/types': ^27.1.1
   '@types/fs-extra': ^9.0.13
@@ -31,6 +32,7 @@ dependencies:
   '@actions/core': 1.5.0
   '@actions/exec': 1.1.0
   '@actions/github': 5.0.0
+  '@aiou/eslint-ignore': 0.1.2
   execa: 5.1.1
   fs-extra: 10.0.0
   globby: 11.0.4
@@ -38,7 +40,7 @@ dependencies:
   lodash.intersection: 4.4.0
 
 devDependencies:
-  '@aiou/eslint-config': 0.2.2_eslint@7.32.0+typescript@4.4.3
+  '@aiou/eslint-config': 0.2.3_eslint@7.32.0+typescript@4.4.3
   '@changesets/cli': 2.17.0
   '@jest/types': 27.1.1
   '@types/fs-extra': 9.0.13
@@ -137,15 +139,15 @@ packages:
       - supports-color
     dev: true
 
-  /@aiou/eslint-config/0.2.2_eslint@7.32.0+typescript@4.4.3:
-    resolution: {integrity: sha512-lgsWE3Iga5J5erkdkb4/vmBZg8MYQHR6bk3D5JMVX2ZskU6i3LM/0axhkALH2MtbKCJgCvz5v1+oKYNw4f6d9A==}
+  /@aiou/eslint-config/0.2.3_eslint@7.32.0+typescript@4.4.3:
+    resolution: {integrity: sha512-34UPRYVzBX9nXQoSGx83Hsn9XW4JSTYklivUueZ7YaZapckZHJ/xunGTXEnqauE7Qk6cD493ybisRPthoigZ2A==}
     peerDependencies:
       eslint: '>=7.4.0'
       prettier: '>=2.2.1'
       pretty-quick: '>=3.1.0'
     dependencies:
       '@aiou/eslint-config-react': 0.1.3_eslint@7.32.0+typescript@4.4.3
-      '@aiou/eslint-ignore': 0.1.1
+      '@aiou/eslint-ignore': 0.1.2
       '@aiou/eslint-plugin-progress': 0.1.6_eslint@7.32.0
       eslint: 7.32.0
       eslint-config-prettier: 8.3.0_eslint@7.32.0
@@ -155,9 +157,8 @@ packages:
       - typescript
     dev: true
 
-  /@aiou/eslint-ignore/0.1.1:
-    resolution: {integrity: sha512-EO+wMRPhjH0pdngSFvFIDdx7t4LOwJet0dYg+w3mObTnUZrm+5eUO2chrMfZ8pgNYLF5pMB+2zg5DuhL11VM6A==}
-    dev: true
+  /@aiou/eslint-ignore/0.1.2:
+    resolution: {integrity: sha512-UVJalNnATqay1bTT+EInoeJPgpINrruDjLdlDDl5oZp28GosRLr9i2VVVJ740DHablGNIuCEtTdUj0EupBGcIA==}
 
   /@aiou/eslint-plugin-progress/0.1.6_eslint@7.32.0:
     resolution: {integrity: sha512-znLCfyrUZpx3oCSDIkD6zw6U6Xgl/tpxzKttZyA5ol2Pa/Nbh1TaGK+VeBHHlAOYkGktpGrZ0ELVbdLeyEaQ+w==}

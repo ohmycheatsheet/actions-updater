@@ -4,6 +4,7 @@ import path from 'path'
 import fs from 'fs-extra'
 import globby from 'globby'
 import difference from 'lodash.difference'
+import ignores from '@aiou/eslint-ignore'
 import * as core from '@actions/core'
 
 import { SOURCE } from './constants'
@@ -97,7 +98,7 @@ export const shouldUpdate = () => {
  * @todo support define ignore
  */
 export const update = async () => {
-  const defaultIgnores = ['.git', '.github'].concat(core.getInput('ignores') || [])
+  const defaultIgnores = ['.git', '.github'].concat(ignores).concat(core.getInput('ignores') || [])
   // copy from SOURCE
   const sources = await globby(['**'], {
     cwd: rs(),
@@ -109,10 +110,11 @@ export const update = async () => {
     cwd: rt(),
     gitignore: true,
     dot: true,
-    ignore: defaultIgnores,
+    ignore: defaultIgnores.concat([SOURCE]),
   })
   const adds = difference(sources, targets)
   const dels = difference(targets, sources)
+  console.log(adds, dels)
   for (const file of dels) {
     await fs.remove(rt(file))
   }

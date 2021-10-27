@@ -2599,6 +2599,77 @@ function copyFile(srcFile, destFile, force) {
 
 /***/ }),
 
+/***/ 9258:
+/***/ ((module) => {
+
+module.exports = [
+  'logs',
+  '*.log',
+  'npm-debug.log*',
+  'yarn-debug.log*',
+  'yarn-error.log*',
+  'lerna-debug.log*',
+  '.pnpm-debug.log*',
+  'report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json',
+  'pids',
+  '*.pid',
+  '*.seed',
+  '*.pid.lock',
+  'lib-cov',
+  'coverage',
+  '*.lcov',
+  '.nyc_output',
+  '.grunt',
+  'bower_components',
+  '.lock-wscript',
+  'build/Release',
+  'node_modules/',
+  'jspm_packages/',
+  'web_modules/',
+  '*.tsbuildinfo',
+  '.npm',
+  '.eslintcache',
+  '.rpt2_cache/',
+  '.rts2_cache_cjs/',
+  '.rts2_cache_es/',
+  '.rts2_cache_umd/',
+  '.node_repl_history',
+  '*.tgz',
+  '.yarn-integrity',
+  '.env',
+  '.env.test',
+  '.env.production',
+  '.cache',
+  '.parcel-cache',
+  '.next',
+  'out',
+  '.nuxt',
+  'dist',
+  '.cache/',
+  '.vuepress/dist',
+  '.serverless/',
+  '.fusebox/',
+  '.dynamodb/',
+  '.tern-port',
+  '.vscode-test',
+  '.yarn/cache',
+  '.yarn/unplugged',
+  '.yarn/build-state.yml',
+  '.yarn/install-state.gz',
+  '.pnp.*',
+  '**/pnpm-lock.yaml',
+  '**/pnpm-workspace.yaml',
+  '*.lock',
+  'dist',
+  'lib',
+  'jest',
+  '.next',
+  '.nuxt',
+]
+
+
+/***/ }),
+
 /***/ 3262:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -22243,10 +22314,7 @@ var createPR = function (owner, name) { return (0, tslib_1.__awaiter)(void 0, vo
                 _a.sent();
                 console.log('pull request found');
                 _a.label = 16;
-            case 16: return [4 /*yield*/, fs_extra_1.default.remove((0, utils_1.rs)())];
-            case 17:
-                _a.sent();
-                return [2 /*return*/];
+            case 16: return [2 /*return*/];
         }
     });
 }); };
@@ -22269,6 +22337,7 @@ var path_1 = (0, tslib_1.__importDefault)(__nccwpck_require__(5622));
 var fs_extra_1 = (0, tslib_1.__importDefault)(__nccwpck_require__(9938));
 var globby_1 = (0, tslib_1.__importDefault)(__nccwpck_require__(7845));
 var lodash_difference_1 = (0, tslib_1.__importDefault)(__nccwpck_require__(3408));
+var eslint_ignore_1 = (0, tslib_1.__importDefault)(__nccwpck_require__(9258));
 var core = (0, tslib_1.__importStar)(__nccwpck_require__(5251));
 var constants_1 = __nccwpck_require__(1005);
 /**
@@ -22357,11 +22426,11 @@ exports.shouldUpdate = shouldUpdate;
  * @todo support define ignore
  */
 var update = function () { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
-    var defaultIgnores, sources, targets, dels, _i, dels_1, file;
-    return (0, tslib_1.__generator)(this, function (_a) {
-        switch (_a.label) {
+    var defaultIgnores, sources, targets, adds, dels, _i, dels_1, file, _a, adds_1, file;
+    return (0, tslib_1.__generator)(this, function (_b) {
+        switch (_b.label) {
             case 0:
-                defaultIgnores = ['.git', '.github'].concat(core.getInput('ignores') || []);
+                defaultIgnores = ['.git', '.github'].concat(eslint_ignore_1.default).concat(core.getInput('ignores') || []);
                 return [4 /*yield*/, (0, globby_1.default)(['**'], {
                         cwd: (0, exports.rs)(),
                         gitignore: true,
@@ -22369,29 +22438,44 @@ var update = function () { return (0, tslib_1.__awaiter)(void 0, void 0, void 0,
                         ignore: defaultIgnores,
                     })];
             case 1:
-                sources = _a.sent();
+                sources = _b.sent();
                 return [4 /*yield*/, (0, globby_1.default)(['**'], {
                         cwd: (0, exports.rt)(),
                         gitignore: true,
                         dot: true,
-                        ignore: defaultIgnores,
+                        ignore: defaultIgnores.concat([constants_1.SOURCE]),
                     })];
             case 2:
-                targets = _a.sent();
+                targets = _b.sent();
+                adds = (0, lodash_difference_1.default)(sources, targets);
                 dels = (0, lodash_difference_1.default)(targets, sources);
+                console.log(adds, dels);
                 _i = 0, dels_1 = dels;
-                _a.label = 3;
+                _b.label = 3;
             case 3:
                 if (!(_i < dels_1.length)) return [3 /*break*/, 6];
                 file = dels_1[_i];
                 return [4 /*yield*/, fs_extra_1.default.remove((0, exports.rt)(file))];
             case 4:
-                _a.sent();
-                _a.label = 5;
+                _b.sent();
+                _b.label = 5;
             case 5:
                 _i++;
                 return [3 /*break*/, 3];
-            case 6: return [2 /*return*/];
+            case 6:
+                _a = 0, adds_1 = adds;
+                _b.label = 7;
+            case 7:
+                if (!(_a < adds_1.length)) return [3 /*break*/, 10];
+                file = adds_1[_a];
+                return [4 /*yield*/, fs_extra_1.default.copy((0, exports.rs)(file), (0, exports.rt)(file))];
+            case 8:
+                _b.sent();
+                _b.label = 9;
+            case 9:
+                _a++;
+                return [3 /*break*/, 7];
+            case 10: return [2 /*return*/];
         }
     });
 }); };
