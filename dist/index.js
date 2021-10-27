@@ -13000,49 +13000,57 @@ var createPR = function (owner, name) { return (0, tslib_1.__awaiter)(void 0, vo
             case 5:
                 _a.sent();
                 return [2 /*return*/];
-            case 6:
+            case 6: 
+            // no git submodules
+            return [4 /*yield*/, fs_extra_1.default.remove((0, utils_1.rs)('.git'))];
+            case 7:
                 // no git submodules
-                fs_extra_1.default.removeSync((0, utils_1.rs)('.git'));
+                _a.sent();
+                return [4 /*yield*/, fs_extra_1.default.remove((0, utils_1.rs)('.github/workflows'))
+                    // copy from SOURCE
+                ];
+            case 8:
+                _a.sent();
                 // copy from SOURCE
                 return [4 /*yield*/, fs_extra_1.default.copy((0, utils_1.rs)(), (0, utils_1.rt)())
                     // clean up SOURCE
                 ];
-            case 7:
+            case 9:
                 // copy from SOURCE
                 _a.sent();
                 // clean up SOURCE
                 return [4 /*yield*/, fs_extra_1.default.remove((0, utils_1.rs)())
                     // create pr
                 ];
-            case 8:
+            case 10:
                 // clean up SOURCE
                 _a.sent();
                 commitMessage = 'chore: update template';
                 return [4 /*yield*/, gitUtils.checkIfClean()];
-            case 9:
-                if (!!(_a.sent())) return [3 /*break*/, 11];
+            case 11:
+                if (!!(_a.sent())) return [3 /*break*/, 13];
                 finalCommitMessage = "" + commitMessage;
                 return [4 /*yield*/, gitUtils.commitAll(finalCommitMessage)];
-            case 10:
-                _a.sent();
-                _a.label = 11;
-            case 11: return [4 /*yield*/, gitUtils.push(head, { force: true })
-                // create pr
-            ];
             case 12:
                 _a.sent();
-                body = (0, utils_1.readChangelog)();
-                if (!(searchResult.data.items.length === 0)) return [3 /*break*/, 14];
-                return [4 /*yield*/, octokit.rest.pulls.create((0, tslib_1.__assign)({ base: branch, head: head, title: 'feat: update template', body: body }, github.context.repo))];
-            case 13:
+                _a.label = 13;
+            case 13: return [4 /*yield*/, gitUtils.push(head, { force: true })
+                // create pr
+            ];
+            case 14:
                 _a.sent();
-                return [3 /*break*/, 16];
-            case 14: return [4 /*yield*/, octokit.rest.pulls.update((0, tslib_1.__assign)({ pull_number: searchResult.data.items[0].number, title: 'feat: update template', body: body }, github.context.repo))];
+                body = (0, utils_1.readChangelog)();
+                if (!(searchResult.data.items.length === 0)) return [3 /*break*/, 16];
+                return [4 /*yield*/, octokit.rest.pulls.create((0, tslib_1.__assign)({ base: branch, head: head, title: 'feat: update template', body: body }, github.context.repo))];
             case 15:
                 _a.sent();
+                return [3 /*break*/, 18];
+            case 16: return [4 /*yield*/, octokit.rest.pulls.update((0, tslib_1.__assign)({ pull_number: searchResult.data.items[0].number, title: 'feat: update template', body: body }, github.context.repo))];
+            case 17:
+                _a.sent();
                 console.log('pull request found');
-                _a.label = 16;
-            case 16: return [2 /*return*/];
+                _a.label = 18;
+            case 18: return [2 /*return*/];
         }
     });
 }); };
@@ -13120,10 +13128,10 @@ var readChangelog = function () {
 };
 exports.readChangelog = readChangelog;
 var readVersion = function () {
-    if (!fs_extra_1.default.existsSync((0, exports.rt)('package.json'))) {
+    if (!fs_extra_1.default.existsSync((0, exports.rs)('package.json'))) {
         return 'v1';
     }
-    var pkg = fs_extra_1.default.readJSONSync((0, exports.rt)('package.json'));
+    var pkg = fs_extra_1.default.readJSONSync((0, exports.rs)('package.json'));
     var major = pkg.version.split('.')[0];
     return "v" + major;
 };

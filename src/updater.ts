@@ -33,7 +33,8 @@ export const createPR = async (owner: string, name: string) => {
     return
   }
   // no git submodules
-  fs.removeSync(rs('.git'))
+  await fs.remove(rs('.git'))
+  await fs.remove(rs('.github/workflows'))
   // copy from SOURCE
   await fs.copy(rs(), rt())
   // clean up SOURCE
