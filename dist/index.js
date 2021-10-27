@@ -5814,6 +5814,19 @@ exports.request = request;
 
 /***/ }),
 
+/***/ 7380:
+/***/ ((module) => {
+
+"use strict";
+
+
+module.exports = (...arguments_) => {
+	return [...new Set([].concat(...arguments_))];
+};
+
+
+/***/ }),
+
 /***/ 7837:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
@@ -10817,82 +10830,37 @@ module.exports = function globParent(str, opts) {
 
 /***/ }),
 
-/***/ 3749:
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __nccwpck_require__) => {
+/***/ 6648:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
-// ESM COMPAT FLAG
-__nccwpck_require__.r(__webpack_exports__);
 
-// EXPORTS
-__nccwpck_require__.d(__webpack_exports__, {
-  "generateGlobTasks": () => (/* binding */ generateGlobTasks),
-  "globby": () => (/* binding */ globby),
-  "globbyStream": () => (/* binding */ globbyStream),
-  "globbySync": () => (/* binding */ globbySync),
-  "isDynamicPattern": () => (/* binding */ isDynamicPattern),
-  "isGitIgnored": () => (/* reexport */ isGitIgnored),
-  "isGitIgnoredSync": () => (/* reexport */ isGitIgnoredSync)
-});
-
-;// CONCATENATED MODULE: external "node:fs"
-const external_node_fs_namespaceObject = require("node:fs");
-;// CONCATENATED MODULE: ./node_modules/.pnpm/array-union@3.0.1/node_modules/array-union/index.js
-const arrayUnion = (...arguments_) => [...new Set(arguments_.flat())];
-
-/* harmony default export */ const array_union = (arrayUnion);
-
-// EXTERNAL MODULE: ./node_modules/.pnpm/merge2@1.4.1/node_modules/merge2/index.js
-var merge2 = __nccwpck_require__(7658);
-// EXTERNAL MODULE: ./node_modules/.pnpm/fast-glob@3.2.7/node_modules/fast-glob/out/index.js
-var out = __nccwpck_require__(9826);
-// EXTERNAL MODULE: ./node_modules/.pnpm/dir-glob@3.0.1/node_modules/dir-glob/index.js
-var dir_glob = __nccwpck_require__(2679);
-;// CONCATENATED MODULE: external "node:util"
-const external_node_util_namespaceObject = require("node:util");
-;// CONCATENATED MODULE: external "node:path"
-const external_node_path_namespaceObject = require("node:path");
-// EXTERNAL MODULE: ./node_modules/.pnpm/ignore@5.1.8/node_modules/ignore/index.js
-var ignore = __nccwpck_require__(5716);
-;// CONCATENATED MODULE: ./node_modules/.pnpm/slash@4.0.0/node_modules/slash/index.js
-function slash(path) {
-	const isExtendedLengthPath = /^\\\\\?\\/.test(path);
-	const hasNonAscii = /[^\u0000-\u0080]+/.test(path); // eslint-disable-line no-control-regex
-
-	if (isExtendedLengthPath || hasNonAscii) {
-		return path;
-	}
-
-	return path.replace(/\\/g, '/');
-}
-
-;// CONCATENATED MODULE: ./node_modules/.pnpm/globby@12.0.2/node_modules/globby/gitignore.js
-
-
-
-
-
-
+const {promisify} = __nccwpck_require__(1669);
+const fs = __nccwpck_require__(5747);
+const path = __nccwpck_require__(5622);
+const fastGlob = __nccwpck_require__(9826);
+const gitIgnore = __nccwpck_require__(5716);
+const slash = __nccwpck_require__(7483);
 
 const DEFAULT_IGNORE = [
 	'**/node_modules/**',
 	'**/flow-typed/**',
 	'**/coverage/**',
-	'**/.git',
+	'**/.git'
 ];
 
-const readFileP = (0,external_node_util_namespaceObject.promisify)(external_node_fs_namespaceObject.readFile);
+const readFileP = promisify(fs.readFile);
 
 const mapGitIgnorePatternTo = base => ignore => {
 	if (ignore.startsWith('!')) {
-		return '!' + external_node_path_namespaceObject.posix.join(base, ignore.slice(1));
+		return '!' + path.posix.join(base, ignore.slice(1));
 	}
 
-	return external_node_path_namespaceObject.posix.join(base, ignore);
+	return path.posix.join(base, ignore);
 };
 
 const parseGitIgnore = (content, options) => {
-	const base = slash(external_node_path_namespaceObject.relative(options.cwd, external_node_path_namespaceObject.dirname(options.fileName)));
+	const base = slash(path.relative(options.cwd, path.dirname(options.fileName)));
 
 	return content
 		.split(/\r?\n/)
@@ -10902,11 +10870,11 @@ const parseGitIgnore = (content, options) => {
 };
 
 const reduceIgnore = files => {
-	const ignores = ignore();
+	const ignores = gitIgnore();
 	for (const file of files) {
 		ignores.add(parseGitIgnore(file.content, {
 			cwd: file.cwd,
-			fileName: file.filePath,
+			fileName: file.filePath
 		}));
 	}
 
@@ -10915,7 +10883,7 @@ const reduceIgnore = files => {
 
 const ensureAbsolutePathForCwd = (cwd, p) => {
 	cwd = slash(cwd);
-	if (external_node_path_namespaceObject.isAbsolute(p)) {
+	if (path.isAbsolute(p)) {
 		if (slash(p).startsWith(cwd)) {
 			return p;
 		}
@@ -10923,75 +10891,273 @@ const ensureAbsolutePathForCwd = (cwd, p) => {
 		throw new Error(`Path ${p} is not in cwd ${cwd}`);
 	}
 
-	return external_node_path_namespaceObject.join(cwd, p);
+	return path.join(cwd, p);
 };
 
-const getIsIgnoredPredicate = (ignores, cwd) => p => ignores.ignores(slash(external_node_path_namespaceObject.relative(cwd, ensureAbsolutePathForCwd(cwd, p.path || p))));
+const getIsIgnoredPredecate = (ignores, cwd) => {
+	return p => ignores.ignores(slash(path.relative(cwd, ensureAbsolutePathForCwd(cwd, p.path || p))));
+};
 
 const getFile = async (file, cwd) => {
-	const filePath = external_node_path_namespaceObject.join(cwd, file);
+	const filePath = path.join(cwd, file);
 	const content = await readFileP(filePath, 'utf8');
 
 	return {
 		cwd,
 		filePath,
-		content,
+		content
 	};
 };
 
 const getFileSync = (file, cwd) => {
-	const filePath = external_node_path_namespaceObject.join(cwd, file);
-	const content = external_node_fs_namespaceObject.readFileSync(filePath, 'utf8');
+	const filePath = path.join(cwd, file);
+	const content = fs.readFileSync(filePath, 'utf8');
 
 	return {
 		cwd,
 		filePath,
-		content,
+		content
 	};
 };
 
 const normalizeOptions = ({
 	ignore = [],
-	cwd = slash(process.cwd()),
-} = {}) => ({ignore, cwd});
+	cwd = slash(process.cwd())
+} = {}) => {
+	return {ignore, cwd};
+};
 
-const isGitIgnored = async options => {
+module.exports = async options => {
 	options = normalizeOptions(options);
 
-	const paths = await out('**/.gitignore', {
+	const paths = await fastGlob('**/.gitignore', {
 		ignore: DEFAULT_IGNORE.concat(options.ignore),
-		cwd: options.cwd,
+		cwd: options.cwd
 	});
 
 	const files = await Promise.all(paths.map(file => getFile(file, options.cwd)));
 	const ignores = reduceIgnore(files);
 
-	return getIsIgnoredPredicate(ignores, options.cwd);
+	return getIsIgnoredPredecate(ignores, options.cwd);
 };
 
-const isGitIgnoredSync = options => {
+module.exports.sync = options => {
 	options = normalizeOptions(options);
 
-	const paths = out.sync('**/.gitignore', {
+	const paths = fastGlob.sync('**/.gitignore', {
 		ignore: DEFAULT_IGNORE.concat(options.ignore),
-		cwd: options.cwd,
+		cwd: options.cwd
 	});
 
 	const files = paths.map(file => getFileSync(file, options.cwd));
 	const ignores = reduceIgnore(files);
 
-	return getIsIgnoredPredicate(ignores, options.cwd);
+	return getIsIgnoredPredecate(ignores, options.cwd);
 };
 
-;// CONCATENATED MODULE: external "node:stream"
-const external_node_stream_namespaceObject = require("node:stream");
-;// CONCATENATED MODULE: ./node_modules/.pnpm/globby@12.0.2/node_modules/globby/stream-utils.js
+
+/***/ }),
+
+/***/ 7845:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+"use strict";
+
+const fs = __nccwpck_require__(5747);
+const arrayUnion = __nccwpck_require__(7380);
+const merge2 = __nccwpck_require__(7658);
+const fastGlob = __nccwpck_require__(9826);
+const dirGlob = __nccwpck_require__(2679);
+const gitignore = __nccwpck_require__(6648);
+const {FilterStream, UniqueStream} = __nccwpck_require__(6356);
+
+const DEFAULT_FILTER = () => false;
+
+const isNegative = pattern => pattern[0] === '!';
+
+const assertPatternsInput = patterns => {
+	if (!patterns.every(pattern => typeof pattern === 'string')) {
+		throw new TypeError('Patterns must be a string or an array of strings');
+	}
+};
+
+const checkCwdOption = (options = {}) => {
+	if (!options.cwd) {
+		return;
+	}
+
+	let stat;
+	try {
+		stat = fs.statSync(options.cwd);
+	} catch {
+		return;
+	}
+
+	if (!stat.isDirectory()) {
+		throw new Error('The `cwd` option must be a path to a directory');
+	}
+};
+
+const getPathString = p => p.stats instanceof fs.Stats ? p.path : p;
+
+const generateGlobTasks = (patterns, taskOptions) => {
+	patterns = arrayUnion([].concat(patterns));
+	assertPatternsInput(patterns);
+	checkCwdOption(taskOptions);
+
+	const globTasks = [];
+
+	taskOptions = {
+		ignore: [],
+		expandDirectories: true,
+		...taskOptions
+	};
+
+	for (const [index, pattern] of patterns.entries()) {
+		if (isNegative(pattern)) {
+			continue;
+		}
+
+		const ignore = patterns
+			.slice(index)
+			.filter(pattern => isNegative(pattern))
+			.map(pattern => pattern.slice(1));
+
+		const options = {
+			...taskOptions,
+			ignore: taskOptions.ignore.concat(ignore)
+		};
+
+		globTasks.push({pattern, options});
+	}
+
+	return globTasks;
+};
+
+const globDirs = (task, fn) => {
+	let options = {};
+	if (task.options.cwd) {
+		options.cwd = task.options.cwd;
+	}
+
+	if (Array.isArray(task.options.expandDirectories)) {
+		options = {
+			...options,
+			files: task.options.expandDirectories
+		};
+	} else if (typeof task.options.expandDirectories === 'object') {
+		options = {
+			...options,
+			...task.options.expandDirectories
+		};
+	}
+
+	return fn(task.pattern, options);
+};
+
+const getPattern = (task, fn) => task.options.expandDirectories ? globDirs(task, fn) : [task.pattern];
+
+const getFilterSync = options => {
+	return options && options.gitignore ?
+		gitignore.sync({cwd: options.cwd, ignore: options.ignore}) :
+		DEFAULT_FILTER;
+};
+
+const globToTask = task => glob => {
+	const {options} = task;
+	if (options.ignore && Array.isArray(options.ignore) && options.expandDirectories) {
+		options.ignore = dirGlob.sync(options.ignore);
+	}
+
+	return {
+		pattern: glob,
+		options
+	};
+};
+
+module.exports = async (patterns, options) => {
+	const globTasks = generateGlobTasks(patterns, options);
+
+	const getFilter = async () => {
+		return options && options.gitignore ?
+			gitignore({cwd: options.cwd, ignore: options.ignore}) :
+			DEFAULT_FILTER;
+	};
+
+	const getTasks = async () => {
+		const tasks = await Promise.all(globTasks.map(async task => {
+			const globs = await getPattern(task, dirGlob);
+			return Promise.all(globs.map(globToTask(task)));
+		}));
+
+		return arrayUnion(...tasks);
+	};
+
+	const [filter, tasks] = await Promise.all([getFilter(), getTasks()]);
+	const paths = await Promise.all(tasks.map(task => fastGlob(task.pattern, task.options)));
+
+	return arrayUnion(...paths).filter(path_ => !filter(getPathString(path_)));
+};
+
+module.exports.sync = (patterns, options) => {
+	const globTasks = generateGlobTasks(patterns, options);
+
+	const tasks = [];
+	for (const task of globTasks) {
+		const newTask = getPattern(task, dirGlob.sync).map(globToTask(task));
+		tasks.push(...newTask);
+	}
+
+	const filter = getFilterSync(options);
+
+	let matches = [];
+	for (const task of tasks) {
+		matches = arrayUnion(matches, fastGlob.sync(task.pattern, task.options));
+	}
+
+	return matches.filter(path_ => !filter(path_));
+};
+
+module.exports.stream = (patterns, options) => {
+	const globTasks = generateGlobTasks(patterns, options);
+
+	const tasks = [];
+	for (const task of globTasks) {
+		const newTask = getPattern(task, dirGlob.sync).map(globToTask(task));
+		tasks.push(...newTask);
+	}
+
+	const filter = getFilterSync(options);
+	const filterStream = new FilterStream(p => !filter(p));
+	const uniqueStream = new UniqueStream();
+
+	return merge2(tasks.map(task => fastGlob.stream(task.pattern, task.options)))
+		.pipe(filterStream)
+		.pipe(uniqueStream);
+};
+
+module.exports.generateGlobTasks = generateGlobTasks;
+
+module.exports.hasMagic = (patterns, options) => []
+	.concat(patterns)
+	.some(pattern => fastGlob.isDynamicPattern(pattern, options));
+
+module.exports.gitignore = gitignore;
 
 
-class ObjectTransform extends external_node_stream_namespaceObject.Transform {
+/***/ }),
+
+/***/ 6356:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+"use strict";
+
+const {Transform} = __nccwpck_require__(2413);
+
+class ObjectTransform extends Transform {
 	constructor() {
 		super({
-			objectMode: true,
+			objectMode: true
 		});
 	}
 }
@@ -11027,192 +11193,10 @@ class UniqueStream extends ObjectTransform {
 	}
 }
 
-;// CONCATENATED MODULE: ./node_modules/.pnpm/globby@12.0.2/node_modules/globby/index.js
-
-
-
-
-
-
-
-
-const DEFAULT_FILTER = () => false;
-
-const isNegative = pattern => pattern[0] === '!';
-
-const assertPatternsInput = patterns => {
-	if (!patterns.every(pattern => typeof pattern === 'string')) {
-		throw new TypeError('Patterns must be a string or an array of strings');
-	}
+module.exports = {
+	FilterStream,
+	UniqueStream
 };
-
-const checkCwdOption = (options = {}) => {
-	if (!options.cwd) {
-		return;
-	}
-
-	let stat;
-	try {
-		stat = external_node_fs_namespaceObject.statSync(options.cwd);
-	} catch {
-		return;
-	}
-
-	if (!stat.isDirectory()) {
-		throw new Error('The `cwd` option must be a path to a directory');
-	}
-};
-
-const getPathString = p => p.stats instanceof external_node_fs_namespaceObject.Stats ? p.path : p;
-
-const generateGlobTasks = (patterns, taskOptions) => {
-	patterns = array_union([patterns].flat());
-	assertPatternsInput(patterns);
-	checkCwdOption(taskOptions);
-
-	const globTasks = [];
-
-	taskOptions = {
-		ignore: [],
-		expandDirectories: true,
-		...taskOptions,
-	};
-
-	for (const [index, pattern] of patterns.entries()) {
-		if (isNegative(pattern)) {
-			continue;
-		}
-
-		const ignore = patterns
-			.slice(index)
-			.filter(pattern => isNegative(pattern))
-			.map(pattern => pattern.slice(1));
-
-		const options = {
-			...taskOptions,
-			ignore: [...taskOptions.ignore, ...ignore],
-		};
-
-		globTasks.push({pattern, options});
-	}
-
-	return globTasks;
-};
-
-const globDirectories = (task, fn) => {
-	let options = {};
-	if (task.options.cwd) {
-		options.cwd = task.options.cwd;
-	}
-
-	if (Array.isArray(task.options.expandDirectories)) {
-		options = {
-			...options,
-			files: task.options.expandDirectories,
-		};
-	} else if (typeof task.options.expandDirectories === 'object') {
-		options = {
-			...options,
-			...task.options.expandDirectories,
-		};
-	}
-
-	return fn(task.pattern, options);
-};
-
-const getPattern = (task, fn) => task.options.expandDirectories ? globDirectories(task, fn) : [task.pattern];
-
-const getFilterSync = options => options && options.gitignore
-	? isGitIgnoredSync({cwd: options.cwd, ignore: options.ignore})
-	: DEFAULT_FILTER;
-
-const globToTask = task => async glob => {
-	const {options} = task;
-	if (options.ignore && Array.isArray(options.ignore) && options.expandDirectories) {
-		options.ignore = await dir_glob(options.ignore);
-	}
-
-	return {
-		pattern: glob,
-		options,
-	};
-};
-
-const globToTaskSync = task => glob => {
-	const {options} = task;
-	if (options.ignore && Array.isArray(options.ignore) && options.expandDirectories) {
-		options.ignore = dir_glob.sync(options.ignore);
-	}
-
-	return {
-		pattern: glob,
-		options,
-	};
-};
-
-const globby = async (patterns, options) => {
-	const globTasks = generateGlobTasks(patterns, options);
-
-	const getFilter = async () => options && options.gitignore
-		? isGitIgnored({cwd: options.cwd, ignore: options.ignore})
-		: DEFAULT_FILTER;
-
-	const getTasks = async () => {
-		const tasks = await Promise.all(globTasks.map(async task => {
-			const globs = await getPattern(task, dir_glob);
-			return Promise.all(globs.map(globToTask(task)));
-		}));
-
-		return array_union(...tasks);
-	};
-
-	const [filter, tasks] = await Promise.all([getFilter(), getTasks()]);
-	const paths = await Promise.all(tasks.map(task => out(task.pattern, task.options)));
-
-	return array_union(...paths).filter(path_ => !filter(getPathString(path_)));
-};
-
-const globbySync = (patterns, options) => {
-	const globTasks = generateGlobTasks(patterns, options);
-
-	const tasks = [];
-	for (const task of globTasks) {
-		const newTask = getPattern(task, dir_glob.sync).map(globToTaskSync(task));
-		tasks.push(...newTask);
-	}
-
-	const filter = getFilterSync(options);
-
-	let matches = [];
-	for (const task of tasks) {
-		matches = array_union(matches, out.sync(task.pattern, task.options));
-	}
-
-	return matches.filter(path_ => !filter(path_));
-};
-
-const globbyStream = (patterns, options) => {
-	const globTasks = generateGlobTasks(patterns, options);
-
-	const tasks = [];
-	for (const task of globTasks) {
-		const newTask = getPattern(task, dir_glob.sync).map(globToTaskSync(task));
-		tasks.push(...newTask);
-	}
-
-	const filter = getFilterSync(options);
-	const filterStream = new FilterStream(p => !filter(p));
-	const uniqueStream = new UniqueStream();
-
-	return merge2(tasks.map(task => out.stream(task.pattern, task.options)))
-		.pipe(filterStream)
-		.pipe(uniqueStream);
-};
-
-const isDynamicPattern = (patterns, options) => [patterns].flat()
-	.some(pattern => out.isDynamicPattern(pattern, options));
-
-
 
 
 /***/ }),
@@ -19917,6 +19901,25 @@ function runParallel (tasks, cb) {
 
 /***/ }),
 
+/***/ 7483:
+/***/ ((module) => {
+
+"use strict";
+
+module.exports = path => {
+	const isExtendedLengthPath = /^\\\\\?\\/.test(path);
+	const hasNonAscii = /[^\u0000-\u0080]+/.test(path); // eslint-disable-line no-control-regex
+
+	if (isExtendedLengthPath || hasNonAscii) {
+		return path;
+	}
+
+	return path.replace(/\\/g, '/');
+};
+
+
+/***/ }),
+
 /***/ 7238:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
@@ -23329,7 +23332,7 @@ var exec_1 = __nccwpck_require__(4654);
 var github = (0, tslib_1.__importStar)(__nccwpck_require__(8262));
 var path_1 = (0, tslib_1.__importDefault)(__nccwpck_require__(5622));
 var fs_extra_1 = (0, tslib_1.__importDefault)(__nccwpck_require__(9938));
-var globby_1 = __nccwpck_require__(3749);
+var globby_1 = (0, tslib_1.__importDefault)(__nccwpck_require__(7845));
 var lodash_difference_1 = (0, tslib_1.__importDefault)(__nccwpck_require__(3408));
 var lodash_intersection_1 = (0, tslib_1.__importDefault)(__nccwpck_require__(2470));
 var core = (0, tslib_1.__importStar)(__nccwpck_require__(5251));
@@ -23425,7 +23428,7 @@ var update = function () { return (0, tslib_1.__awaiter)(void 0, void 0, void 0,
         switch (_a.label) {
             case 0:
                 defaultIgnores = ['.git', '.github'].concat(core.getInput('ignores') || []);
-                return [4 /*yield*/, (0, globby_1.globby)(['**'], {
+                return [4 /*yield*/, (0, globby_1.default)(['**'], {
                         cwd: (0, exports.rs)(),
                         gitignore: true,
                         dot: true,
@@ -23433,7 +23436,7 @@ var update = function () { return (0, tslib_1.__awaiter)(void 0, void 0, void 0,
                     })];
             case 1:
                 sources = _a.sent();
-                return [4 /*yield*/, (0, globby_1.globby)(['**'], {
+                return [4 /*yield*/, (0, globby_1.default)(['**'], {
                         cwd: (0, exports.rt)(),
                         gitignore: true,
                         dot: true,
@@ -23651,34 +23654,6 @@ module.exports = require("zlib");
 /******/ 	}
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
-/******/ 		__nccwpck_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(__nccwpck_require__.o(definition, key) && !__nccwpck_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
-/******/ 			}
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__nccwpck_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/make namespace object */
-/******/ 	(() => {
-/******/ 		// define __esModule on exports
-/******/ 		__nccwpck_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/compat */
 /******/ 	
 /******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
