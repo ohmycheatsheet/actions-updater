@@ -15,3 +15,7 @@ export declare const readChangelog: () => string;
 export declare const readVersion: () => string;
 export declare const DEFAULT_REPO = "ohmycheatsheet/cheatsheets";
 export declare const shouldUpdate: () => boolean;
+/**
+ * @todo support define ignore
+ */
+export declare const update: () => Promise<void>;

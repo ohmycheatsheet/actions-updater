@@ -3,7 +3,7 @@ import * as core from '@actions/core'
 import fs from 'fs-extra'
 
 import * as gitUtils from './gitUtils'
-import { readChangelog, readVersion, rs, rt, shouldUpdate, DEFAULT_REPO } from './utils'
+import { readChangelog, readVersion, rs, shouldUpdate, DEFAULT_REPO, update } from './utils'
 
 const octokit = github.getOctokit(process.env.GITHUB_TOKEN!)
 
@@ -32,13 +32,7 @@ export const createPR = async (owner: string, name: string) => {
     await fs.remove(rs())
     return
   }
-  // no git submodules
-  await fs.remove(rs('.git'))
-  await fs.remove(rs('.github/workflows'))
-  // copy from SOURCE
-  await fs.copy(rs(), rt())
-  // clean up SOURCE
-  await fs.remove(rs())
+  await update()
 
   // create pr
   const commitMessage = 'chore: update template'

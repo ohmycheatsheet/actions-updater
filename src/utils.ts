@@ -2,6 +2,9 @@ import { exec } from '@actions/exec'
 import * as github from '@actions/github'
 import path from 'path'
 import fs from 'fs-extra'
+import { globby } from 'globby'
+import difference from 'lodash.difference'
+import intersection from 'lodash.intersection'
 import * as core from '@actions/core'
 
 import { SOURCE } from './constants'
@@ -89,4 +92,29 @@ export const shouldUpdate = () => {
     return false
   }
   return true
+}
+
+/**
+ * @todo support define ignore
+ */
+export const update = async () => {
+  const defaultIgnores = ['.git', '.github'].concat(core.getInput('ignores') || [])
+  // copy from SOURCE
+  const sources = await globby(['**'], {
+    cwd: rs(),
+    gitignore: true,
+    dot: true,
+    ignore: defaultIgnores,
+  })
+  const targets = await globby(['**'], {
+    cwd: rt(),
+    gitignore: true,
+    dot: true,
+    ignore: defaultIgnores,
+  })
+  const dels = difference(sources, targets)
+  const updates = intersection(sources, targets)
+  console.log(dels, updates)
+  // clean up SOURCE
+  await fs.remove(rs())
 }
