@@ -507,7 +507,7 @@ exports.toCommandProperties = toCommandProperties;
 
 /***/ }),
 
-/***/ 3531:
+/***/ 4654:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -5533,7 +5533,7 @@ module.exports = copy
 "use strict";
 
 
-const u = __nccwpck_require__(6399).fromCallback
+const u = __nccwpck_require__(3531).fromCallback
 module.exports = {
   copy: u(__nccwpck_require__(8611))
 }
@@ -5547,7 +5547,7 @@ module.exports = {
 "use strict";
 
 
-const u = __nccwpck_require__(6399).fromPromise
+const u = __nccwpck_require__(3531).fromPromise
 const fs = __nccwpck_require__(9185)
 const path = __nccwpck_require__(5622)
 const mkdir = __nccwpck_require__(4064)
@@ -5594,7 +5594,7 @@ module.exports = {
 "use strict";
 
 
-const u = __nccwpck_require__(6399).fromCallback
+const u = __nccwpck_require__(3531).fromCallback
 const path = __nccwpck_require__(5622)
 const fs = __nccwpck_require__(6386)
 const mkdir = __nccwpck_require__(4064)
@@ -5702,7 +5702,7 @@ module.exports = {
 "use strict";
 
 
-const u = __nccwpck_require__(6399).fromCallback
+const u = __nccwpck_require__(3531).fromCallback
 const path = __nccwpck_require__(5622)
 const fs = __nccwpck_require__(6386)
 const mkdir = __nccwpck_require__(4064)
@@ -5920,7 +5920,7 @@ module.exports = {
 "use strict";
 
 
-const u = __nccwpck_require__(6399).fromCallback
+const u = __nccwpck_require__(3531).fromCallback
 const path = __nccwpck_require__(5622)
 const fs = __nccwpck_require__(9185)
 const _mkdirs = __nccwpck_require__(4064)
@@ -6011,7 +6011,7 @@ module.exports = {
 
 // This is adapted from https://github.com/normalize/mz
 // Copyright (c) 2014-2016 Jonathan Ong me@jongleberry.com and Contributors
-const u = __nccwpck_require__(6399).fromCallback
+const u = __nccwpck_require__(3531).fromCallback
 const fs = __nccwpck_require__(6386)
 
 const api = [
@@ -6163,7 +6163,7 @@ module.exports = {
 "use strict";
 
 
-const u = __nccwpck_require__(6399).fromPromise
+const u = __nccwpck_require__(3531).fromPromise
 const jsonFile = __nccwpck_require__(3893)
 
 jsonFile.outputJson = u(__nccwpck_require__(766))
@@ -6245,7 +6245,7 @@ module.exports = outputJson
 
 "use strict";
 
-const u = __nccwpck_require__(6399).fromPromise
+const u = __nccwpck_require__(3531).fromPromise
 const { makeDir: _makeDir, makeDirSync } = __nccwpck_require__(1258)
 const makeDir = u(_makeDir)
 
@@ -6407,7 +6407,7 @@ module.exports = moveSync
 "use strict";
 
 
-const u = __nccwpck_require__(6399).fromCallback
+const u = __nccwpck_require__(3531).fromCallback
 module.exports = {
   move: u(__nccwpck_require__(1947))
 }
@@ -6502,7 +6502,7 @@ module.exports = move
 "use strict";
 
 
-const u = __nccwpck_require__(6399).fromCallback
+const u = __nccwpck_require__(3531).fromCallback
 const fs = __nccwpck_require__(6386)
 const path = __nccwpck_require__(5622)
 const mkdir = __nccwpck_require__(4064)
@@ -6549,7 +6549,7 @@ module.exports = {
 
 "use strict";
 
-const u = __nccwpck_require__(6399).fromPromise
+const u = __nccwpck_require__(3531).fromPromise
 const fs = __nccwpck_require__(9185)
 
 function pathExists (path) {
@@ -6571,7 +6571,7 @@ module.exports = {
 
 
 const fs = __nccwpck_require__(6386)
-const u = __nccwpck_require__(6399).fromCallback
+const u = __nccwpck_require__(3531).fromCallback
 const rimraf = __nccwpck_require__(4608)
 
 function remove (path, callback) {
@@ -8100,7 +8100,7 @@ try {
 } catch (_) {
   _fs = __nccwpck_require__(5747)
 }
-const universalify = __nccwpck_require__(6399)
+const universalify = __nccwpck_require__(3531)
 const { stringify, stripBom } = __nccwpck_require__(4783)
 
 async function _readFile (file, options = {}) {
@@ -10755,7 +10755,7 @@ exports.getUserAgent = getUserAgent;
 
 /***/ }),
 
-/***/ 6399:
+/***/ 3531:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -12808,7 +12808,7 @@ exports.SOURCE = '.omcs/source';
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.clone = exports.checkIfClean = exports.commitAll = exports.reset = exports.switchToMaybeExistingBranch = exports.pushTags = exports.push = exports.pullBranch = exports.setupUser = void 0;
 var tslib_1 = __nccwpck_require__(1569);
-var exec_1 = __nccwpck_require__(3531);
+var exec_1 = __nccwpck_require__(4654);
 var utils_1 = __nccwpck_require__(1725);
 var setupUser = function () { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
     return (0, tslib_1.__generator)(this, function (_a) {
@@ -12963,7 +12963,6 @@ exports.createPR = void 0;
 var tslib_1 = __nccwpck_require__(1569);
 var github = (0, tslib_1.__importStar)(__nccwpck_require__(8262));
 var core = (0, tslib_1.__importStar)(__nccwpck_require__(5251));
-var exec_1 = __nccwpck_require__(3531);
 var fs_extra_1 = (0, tslib_1.__importDefault)(__nccwpck_require__(9938));
 var gitUtils = (0, tslib_1.__importStar)(__nccwpck_require__(1789));
 var utils_1 = __nccwpck_require__(1725);
@@ -13001,53 +13000,49 @@ var createPR = function (owner, name) { return (0, tslib_1.__awaiter)(void 0, vo
             case 5:
                 _a.sent();
                 return [2 /*return*/];
-            case 6: return [4 /*yield*/, (0, exec_1.exec)('ls', [], { cwd: (0, utils_1.rs)() })
-                // no git submodules
-            ];
-            case 7:
-                _a.sent();
+            case 6:
                 // no git submodules
                 fs_extra_1.default.removeSync((0, utils_1.rs)('.git'));
                 // copy from SOURCE
                 return [4 /*yield*/, fs_extra_1.default.copy((0, utils_1.rs)(), (0, utils_1.rt)())
                     // clean up SOURCE
                 ];
-            case 8:
+            case 7:
                 // copy from SOURCE
                 _a.sent();
                 // clean up SOURCE
                 return [4 /*yield*/, fs_extra_1.default.remove((0, utils_1.rs)())
                     // create pr
                 ];
-            case 9:
+            case 8:
                 // clean up SOURCE
                 _a.sent();
                 commitMessage = 'chore: update template';
                 return [4 /*yield*/, gitUtils.checkIfClean()];
-            case 10:
-                if (!!(_a.sent())) return [3 /*break*/, 12];
+            case 9:
+                if (!!(_a.sent())) return [3 /*break*/, 11];
                 finalCommitMessage = "" + commitMessage;
                 return [4 /*yield*/, gitUtils.commitAll(finalCommitMessage)];
-            case 11:
+            case 10:
                 _a.sent();
-                _a.label = 12;
-            case 12: return [4 /*yield*/, gitUtils.push(head, { force: true })
+                _a.label = 11;
+            case 11: return [4 /*yield*/, gitUtils.push(head, { force: true })
                 // create pr
             ];
-            case 13:
+            case 12:
                 _a.sent();
                 body = (0, utils_1.readChangelog)();
-                if (!(searchResult.data.items.length === 0)) return [3 /*break*/, 15];
+                if (!(searchResult.data.items.length === 0)) return [3 /*break*/, 14];
                 return [4 /*yield*/, octokit.rest.pulls.create((0, tslib_1.__assign)({ base: branch, head: head, title: 'feat: update template', body: body }, github.context.repo))];
-            case 14:
+            case 13:
                 _a.sent();
-                return [3 /*break*/, 17];
-            case 15: return [4 /*yield*/, octokit.rest.pulls.update((0, tslib_1.__assign)({ pull_number: searchResult.data.items[0].number, title: 'feat: update template', body: body }, github.context.repo))];
-            case 16:
+                return [3 /*break*/, 16];
+            case 14: return [4 /*yield*/, octokit.rest.pulls.update((0, tslib_1.__assign)({ pull_number: searchResult.data.items[0].number, title: 'feat: update template', body: body }, github.context.repo))];
+            case 15:
                 _a.sent();
                 console.log('pull request found');
-                _a.label = 17;
-            case 17: return [2 /*return*/];
+                _a.label = 16;
+            case 16: return [2 /*return*/];
         }
     });
 }); };
@@ -13064,7 +13059,7 @@ exports.createPR = createPR;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.shouldUpdate = exports.DEFAULT_REPO = exports.readVersion = exports.readChangelog = exports.rs = exports.rt = exports.execWithOutput = void 0;
 var tslib_1 = __nccwpck_require__(1569);
-var exec_1 = __nccwpck_require__(3531);
+var exec_1 = __nccwpck_require__(4654);
 var github = (0, tslib_1.__importStar)(__nccwpck_require__(8262));
 var path_1 = (0, tslib_1.__importDefault)(__nccwpck_require__(5622));
 var fs_extra_1 = (0, tslib_1.__importDefault)(__nccwpck_require__(9938));
@@ -13146,7 +13141,7 @@ var shouldUpdate = function () {
     var pkgOfSource = fs_extra_1.default.readJSONSync((0, exports.rs)('package.json'));
     var pkgOfTarget = fs_extra_1.default.readJSONSync((0, exports.rt)('package.json'));
     if (pkgOfSource.version === pkgOfTarget.version) {
-        core.setOutput('skip', 'same version detected');
+        core.setOutput('skip', "same version detected: current-" + pkgOfTarget.version + " vs source-" + pkgOfSource.version);
         return false;
     }
     return true;

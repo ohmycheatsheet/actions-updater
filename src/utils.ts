@@ -82,7 +82,10 @@ export const shouldUpdate = () => {
   const pkgOfSource = fs.readJSONSync(rs('package.json'))
   const pkgOfTarget = fs.readJSONSync(rt('package.json'))
   if (pkgOfSource.version === pkgOfTarget.version) {
-    core.setOutput('skip', 'same version detected')
+    core.setOutput(
+      'skip',
+      `same version detected: current-${pkgOfTarget.version} vs source-${pkgOfSource.version}`,
+    )
     return false
   }
   return true

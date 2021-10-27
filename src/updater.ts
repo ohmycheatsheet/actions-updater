@@ -1,6 +1,5 @@
 import * as github from '@actions/github'
 import * as core from '@actions/core'
-import { exec } from '@actions/exec'
 import fs from 'fs-extra'
 
 import * as gitUtils from './gitUtils'
@@ -33,7 +32,6 @@ export const createPR = async (owner: string, name: string) => {
     await fs.remove(rs())
     return
   }
-  await exec('ls', [], { cwd: rs() })
   // no git submodules
   fs.removeSync(rs('.git'))
   // copy from SOURCE
