@@ -31,6 +31,7 @@ jobs:
 |name|description|type|required|
 |:---:|:---:|:---:|:---|
 |repo|(input)source repo|string|false|
+|ignores|(input)ignore update files|string[]|false|
 |GITHUB_TOKEN|(env) create/update pr|string|true|
 
 ## development

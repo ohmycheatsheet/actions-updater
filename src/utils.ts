@@ -4,7 +4,6 @@ import path from 'path'
 import fs from 'fs-extra'
 import globby from 'globby'
 import difference from 'lodash.difference'
-import intersection from 'lodash.intersection'
 import * as core from '@actions/core'
 
 import { SOURCE } from './constants'
@@ -112,9 +111,12 @@ export const update = async () => {
     dot: true,
     ignore: defaultIgnores,
   })
-  const dels = difference(sources, targets)
-  const updates = intersection(sources, targets)
-  console.log(dels, updates)
-  // clean up SOURCE
-  await fs.remove(rs())
+  const adds = difference(sources, targets)
+  const dels = difference(targets, sources)
+  for (const file of dels) {
+    await fs.remove(rt(file))
+  }
+  for (const file of adds) {
+    await fs.copy(rs(file), rt(file))
+  }
 }

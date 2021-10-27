@@ -32,7 +32,9 @@ export const createPR = async (owner: string, name: string) => {
     await fs.remove(rs())
     return
   }
+  const body = readChangelog()
   await update()
+  await fs.remove(rs())
 
   // create pr
   const commitMessage = 'chore: update template'
@@ -43,7 +45,7 @@ export const createPR = async (owner: string, name: string) => {
   }
   await gitUtils.push(head, { force: true })
   // create pr
-  const body = readChangelog()
+
   if (searchResult.data.items.length === 0) {
     await octokit.rest.pulls.create({
       base: branch,

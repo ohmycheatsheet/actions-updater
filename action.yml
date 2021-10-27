@@ -4,6 +4,9 @@ inputs:
   repo:
     required: false
     description: 'source template repo'
+  ignores:
+    required: false
+    description: 'ignored update files'
   debug:
     required: false
     description: 'debug flag'
