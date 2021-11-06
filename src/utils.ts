@@ -31,7 +31,6 @@ export async function execWithOutput(
           myError += data.toString()
         },
       },
-
       ...options,
     }),
     stdout: myOutput,
@@ -70,14 +69,23 @@ export const readVersion = () => {
   return `v${major}`
 }
 
-export const DEFAULT_REPO = 'ohmycheatsheet/cheatsheets'
+/**
+ * @description validate input
+ */
+export const validate = () => {
+  if (!core.getInput('repo') || !process.env.GITHUB_TOKEN) {
+    console.log('Make sure below input correct')
+    console.log('- [input]: `repo` is required')
+    console.log('Make sure below env correct')
+    console.log('- [env]: `GITHUB_TOKEN` is required')
+    return false
+  }
+  return true
+}
 
 export const shouldUpdate = () => {
-  if (
-    core.getInput('repo') === `${github.context.repo.owner}/${github.context.repo.repo}` ||
-    `${github.context.repo.owner}/${github.context.repo.repo}` === DEFAULT_REPO
-  ) {
-    console.log('skip', 'self update is not allowed')
+  if (core.getInput('repo') === `${github.context.repo.owner}/${github.context.repo.repo}`) {
+    console.log('Skip: self update is not allowed')
     return false
   }
   if (!fs.existsSync(rt('package.json'))) {

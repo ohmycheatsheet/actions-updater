@@ -3,7 +3,7 @@ import * as core from '@actions/core'
 import fs from 'fs-extra'
 
 import * as gitUtils from './gitUtils'
-import { readChangelog, readVersion, rs, shouldUpdate, DEFAULT_REPO, update } from './utils'
+import { readChangelog, readVersion, rs, shouldUpdate, update } from './utils'
 
 const octokit = github.getOctokit(process.env.GITHUB_TOKEN!)
 
@@ -19,14 +19,12 @@ export const createPR = async (owner: string, name: string) => {
     q: searchQuery,
   })
 
-  console.log(searchResult)
-
   // update from SOURCE
   const version = readVersion()
   await gitUtils.clone({
     branch: version,
     folder: rs(),
-    repo: core.getInput('repo') || DEFAULT_REPO,
+    repo: core.getInput('repo'),
   })
   if (!shouldUpdate()) {
     await fs.remove(rs())
