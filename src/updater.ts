@@ -3,7 +3,7 @@ import * as core from '@actions/core'
 import fs from 'fs-extra'
 
 import * as gitUtils from './gitUtils'
-import { readChangelog, readVersion, rs, shouldUpdate, update } from './utils'
+import { readChangelog, readMajorBranch, rs, shouldUpdate, update, readTitle } from './utils'
 
 const octokit = github.getOctokit(process.env.GITHUB_TOKEN!)
 
@@ -20,7 +20,7 @@ export const createPR = async (owner: string, name: string) => {
   })
 
   // update from SOURCE
-  const version = readVersion()
+  const version = readMajorBranch()
   await gitUtils.clone({
     branch: version,
     folder: rs(),
@@ -31,6 +31,7 @@ export const createPR = async (owner: string, name: string) => {
     return
   }
   const body = readChangelog()
+  const title = readTitle()
   await update()
   await fs.remove(rs())
 
@@ -48,14 +49,14 @@ export const createPR = async (owner: string, name: string) => {
     await octokit.rest.pulls.create({
       base: branch,
       head,
-      title: 'feat: update template',
+      title,
       body,
       ...github.context.repo,
     })
   } else {
     await octokit.rest.pulls.update({
       pull_number: searchResult.data.items[0].number,
-      title: 'feat: update template',
+      title,
       body,
       ...github.context.repo,
     })

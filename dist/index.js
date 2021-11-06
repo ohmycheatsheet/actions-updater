@@ -23147,6 +23147,7 @@ function wrappy (fn, cb) {
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SOURCE = void 0;
+// git cloned target folder
 exports.SOURCE = '.omcs/source';
 
 
@@ -23160,6 +23161,7 @@ exports.SOURCE = '.omcs/source';
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.clone = exports.checkIfClean = exports.commitAll = exports.reset = exports.switchToMaybeExistingBranch = exports.pushTags = exports.push = exports.pullBranch = exports.setupUser = void 0;
 var tslib_1 = __nccwpck_require__(1569);
+// refs: changeset/actions
 var exec_1 = __nccwpck_require__(4654);
 var utils_1 = __nccwpck_require__(1725);
 var setupUser = function () { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
@@ -23320,7 +23322,7 @@ var gitUtils = (0, tslib_1.__importStar)(__nccwpck_require__(1789));
 var utils_1 = __nccwpck_require__(1725);
 var octokit = github.getOctokit(process.env.GITHUB_TOKEN);
 var createPR = function (owner, name) { return (0, tslib_1.__awaiter)(void 0, void 0, void 0, function () {
-    var branch, head, searchQuery, searchResult, version, body, commitMessage, finalCommitMessage;
+    var branch, head, searchQuery, searchResult, version, body, title, commitMessage, finalCommitMessage;
     return (0, tslib_1.__generator)(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -23335,15 +23337,16 @@ var createPR = function (owner, name) { return (0, tslib_1.__awaiter)(void 0, vo
                 searchQuery = "repo:" + owner + "/" + name + "+state:open+head:" + head + "+base:" + branch;
                 return [4 /*yield*/, octokit.rest.search.issuesAndPullRequests({
                         q: searchQuery,
-                    })];
+                    })
+                    // update from SOURCE
+                ];
             case 3:
                 searchResult = _a.sent();
-                console.log(searchResult);
-                version = (0, utils_1.readVersion)();
+                version = (0, utils_1.readMajorBranch)();
                 return [4 /*yield*/, gitUtils.clone({
                         branch: version,
                         folder: (0, utils_1.rs)(),
-                        repo: core.getInput('repo') || utils_1.DEFAULT_REPO,
+                        repo: core.getInput('repo'),
                     })];
             case 4:
                 _a.sent();
@@ -23354,6 +23357,7 @@ var createPR = function (owner, name) { return (0, tslib_1.__awaiter)(void 0, vo
                 return [2 /*return*/];
             case 6:
                 body = (0, utils_1.readChangelog)();
+                title = (0, utils_1.readTitle)();
                 return [4 /*yield*/, (0, utils_1.update)()];
             case 7:
                 _a.sent();
@@ -23377,11 +23381,11 @@ var createPR = function (owner, name) { return (0, tslib_1.__awaiter)(void 0, vo
             case 12:
                 _a.sent();
                 if (!(searchResult.data.items.length === 0)) return [3 /*break*/, 14];
-                return [4 /*yield*/, octokit.rest.pulls.create((0, tslib_1.__assign)({ base: branch, head: head, title: 'feat: update template', body: body }, github.context.repo))];
+                return [4 /*yield*/, octokit.rest.pulls.create((0, tslib_1.__assign)({ base: branch, head: head, title: title, body: body }, github.context.repo))];
             case 13:
                 _a.sent();
                 return [3 /*break*/, 16];
-            case 14: return [4 /*yield*/, octokit.rest.pulls.update((0, tslib_1.__assign)({ pull_number: searchResult.data.items[0].number, title: 'feat: update template', body: body }, github.context.repo))];
+            case 14: return [4 /*yield*/, octokit.rest.pulls.update((0, tslib_1.__assign)({ pull_number: searchResult.data.items[0].number, title: title, body: body }, github.context.repo))];
             case 15:
                 _a.sent();
                 console.log('pull request found');
@@ -23401,7 +23405,7 @@ exports.createPR = createPR;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.update = exports.shouldUpdate = exports.DEFAULT_REPO = exports.readVersion = exports.readChangelog = exports.rs = exports.rt = exports.execWithOutput = void 0;
+exports.update = exports.shouldUpdate = exports.validate = exports.readMajorBranch = exports.readTitle = exports.readChangelog = exports.rs = exports.rt = exports.execWithOutput = void 0;
 var tslib_1 = __nccwpck_require__(1569);
 var exec_1 = __nccwpck_require__(4654);
 var github = (0, tslib_1.__importStar)(__nccwpck_require__(8262));
@@ -23467,7 +23471,16 @@ var readChangelog = function () {
     return changelogOfSource.slice(0, changelogOfSource.length - changelogOfTarget.length);
 };
 exports.readChangelog = readChangelog;
-var readVersion = function () {
+var readTitle = function () {
+    var pkgOfSource = fs_extra_1.default.readJSONSync((0, exports.rs)('package.json'));
+    if (!fs_extra_1.default.existsSync((0, exports.rt)('package.json'))) {
+        return "feat: bump version to " + pkgOfSource.version;
+    }
+    var pkgOfTarget = fs_extra_1.default.readJSONSync((0, exports.rt)('package.json'));
+    return "feat: bump version from " + pkgOfTarget.version + " to " + pkgOfSource.version;
+};
+exports.readTitle = readTitle;
+var readMajorBranch = function () {
     if (!fs_extra_1.default.existsSync((0, exports.rs)('package.json'))) {
         return 'v1';
     }
@@ -23475,21 +23488,35 @@ var readVersion = function () {
     var major = pkg.version.split('.')[0];
     return "v" + major;
 };
-exports.readVersion = readVersion;
-exports.DEFAULT_REPO = 'ohmycheatsheet/cheatsheets';
-var shouldUpdate = function () {
-    if (core.getInput('repo') === github.context.repo.owner + "/" + github.context.repo.repo ||
-        github.context.repo.owner + "/" + github.context.repo.repo === exports.DEFAULT_REPO) {
-        console.log('skip', 'self update is not allowed');
+exports.readMajorBranch = readMajorBranch;
+/**
+ * @description validate input
+ */
+var validate = function () {
+    if (!core.getInput('repo') || !process.env.GITHUB_TOKEN) {
+        console.log('Make sure below input correct');
+        console.log('- [input]: `repo` is required');
+        console.log('Make sure below env correct');
+        console.log('- [env]: `GITHUB_TOKEN` is required');
         return false;
     }
+    return true;
+};
+exports.validate = validate;
+var shouldUpdate = function () {
+    if (core.getInput('repo') === github.context.repo.owner + "/" + github.context.repo.repo) {
+        console.log('Skip: self update is not allowed');
+        return false;
+    }
+    // total new repo
     if (!fs_extra_1.default.existsSync((0, exports.rt)('package.json'))) {
         return true;
     }
     var pkgOfSource = fs_extra_1.default.readJSONSync((0, exports.rs)('package.json'));
     var pkgOfTarget = fs_extra_1.default.readJSONSync((0, exports.rt)('package.json'));
+    // uptodate
     if (pkgOfSource.version === pkgOfTarget.version) {
-        core.setOutput('skip', "same version detected: current-" + pkgOfTarget.version + " vs source-" + pkgOfSource.version);
+        console.log("Skip: same version detected, current-" + pkgOfTarget.version + " vs source-" + pkgOfSource.version);
         return false;
     }
     return true;
@@ -23767,6 +23794,7 @@ var core = (0, tslib_1.__importStar)(__nccwpck_require__(5251));
 var github = (0, tslib_1.__importStar)(__nccwpck_require__(8262));
 var updater_1 = __nccwpck_require__(8849);
 var gitUtils_1 = __nccwpck_require__(1789);
+var utils_1 = __nccwpck_require__(1725);
 function run() {
     return (0, tslib_1.__awaiter)(this, void 0, void 0, function () {
         var repo, error_1;
@@ -23775,6 +23803,10 @@ function run() {
                 case 0:
                     _a.trys.push([0, 3, , 4]);
                     repo = github.context.repo;
+                    if (!(0, utils_1.validate)()) {
+                        console.log('Exited');
+                        return [2 /*return*/];
+                    }
                     return [4 /*yield*/, (0, gitUtils_1.setupUser)()];
                 case 1:
                     _a.sent();

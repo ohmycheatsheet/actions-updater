@@ -60,7 +60,16 @@ export const readChangelog = () => {
   return changelogOfSource.slice(0, changelogOfSource.length - changelogOfTarget.length)
 }
 
-export const readVersion = () => {
+export const readTitle = () => {
+  const pkgOfSource = fs.readJSONSync(rs('package.json'))
+  if (!fs.existsSync(rt('package.json'))) {
+    return `feat: bump version to ${pkgOfSource.version}`
+  }
+  const pkgOfTarget = fs.readJSONSync(rt('package.json'))
+  return `feat: bump version from ${pkgOfTarget.version} to ${pkgOfSource.version}`
+}
+
+export const readMajorBranch = () => {
   if (!fs.existsSync(rs('package.json'))) {
     return 'v1'
   }
@@ -88,15 +97,16 @@ export const shouldUpdate = () => {
     console.log('Skip: self update is not allowed')
     return false
   }
+  // total new repo
   if (!fs.existsSync(rt('package.json'))) {
     return true
   }
   const pkgOfSource = fs.readJSONSync(rs('package.json'))
   const pkgOfTarget = fs.readJSONSync(rt('package.json'))
+  // uptodate
   if (pkgOfSource.version === pkgOfTarget.version) {
-    core.setOutput(
-      'skip',
-      `same version detected: current-${pkgOfTarget.version} vs source-${pkgOfSource.version}`,
+    console.log(
+      `Skip: same version detected, current-${pkgOfTarget.version} vs source-${pkgOfSource.version}`,
     )
     return false
   }

@@ -12,8 +12,12 @@ export declare function execWithOutput(command: string, args?: string[], options
 export declare const rt: (pathname?: string) => string;
 export declare const rs: (pathname?: string) => string;
 export declare const readChangelog: () => string;
-export declare const readVersion: () => string;
-export declare const DEFAULT_REPO = "ohmycheatsheet/cheatsheets";
+export declare const readTitle: () => string;
+export declare const readMajorBranch: () => string;
+/**
+ * @description validate input
+ */
+export declare const validate: () => boolean;
 export declare const shouldUpdate: () => boolean;
 /**
  * @todo support define ignore
