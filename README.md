@@ -6,7 +6,19 @@
 
 ## features
 
-- In default, if `current/a.file` not exit in `source`, `a.file` will be deleted.
+In default, this action will diff `source-template-repo` and `current-repo` by filepath recursive
+
+- `deleted:` if `current/a.file` not exist in `source`, `a.file` will be deleted.
+- `add:` if `current/a.file` not exist, but `source/a.file` exist, `a.file` will be added.
+- `update:` if `current/a.file` and `source/a.file` exist, force update `current/a.file`
+
+Friendly pr
+
+- read changelog as pr body
+- bump version like dependabot
+
+![image](https://user-images.githubusercontent.com/6839576/140630037-09abd412-b19a-4893-bded-a3022949dafc.png)
+
 
 ## usage
 
