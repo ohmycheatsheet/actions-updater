@@ -1,6 +1,13 @@
 # @omcs/actions-updater
 
+## 1.1.0
+
+### Minor Changes
+
+- 6a8bad2: repo is required
+
 ## 1.0.0
+
 ### Major Changes
 
 - 05de848: release first major version: update current repo from source repo
