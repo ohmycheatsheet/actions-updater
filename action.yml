@@ -2,7 +2,7 @@ name: 'cheatsheets-updater'
 description: 'update latest cheatsheet template'
 inputs:
   repo:
-    required: false
+    required: true
     description: 'source template repo'
   ignores:
     required: false
