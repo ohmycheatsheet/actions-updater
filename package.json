@@ -22,6 +22,7 @@
   "main": "dist/index.js",
   "scripts": {
     "lint:fix": "eslint . --fix",
+    "build": "pnpm run prepare",
     "prepare": "ncc build ./src/index.ts -o dist --source-map --license licenses.txt && husky install",
     "test": "jest --setupFiles dotenv/config",
     "all": "pnpm run lint && pnpm run prepare && pnpm run test",
