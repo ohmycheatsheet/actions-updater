@@ -7,6 +7,7 @@ import difference from 'lodash.difference'
 import intersection from 'lodash.intersection'
 import ignores from '@aiou/eslint-ignore'
 import * as core from '@actions/core'
+import * as Diff from 'diff'
 
 import { SOURCE } from './constants'
 
@@ -57,7 +58,8 @@ export const readChangelog = () => {
     return changelogOfSource
   }
   const changelogOfTarget = fs.readFileSync(rt('CHANGELOG.md')).toString()
-  return changelogOfSource.slice(0, changelogOfSource.length - changelogOfTarget.length)
+  const diff = Diff.diffLines(changelogOfTarget, changelogOfSource)
+  return diff.find(d => d.added)?.value || 'update cheatsheets template'
 }
 
 export const readTitle = () => {
