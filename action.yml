@@ -1,5 +1,5 @@
-name: 'cheatsheets-updater'
-description: 'update latest cheatsheet template'
+name: 'repo-updater'
+description: 'update latest template repo'
 inputs:
   repo:
     required: true
@@ -10,9 +10,6 @@ inputs:
   debug:
     required: false
     description: 'debug flag'
-outputs:
-  time: # output will be available to future steps
-    description: 'The message to output'
 runs:
   using: 'node12'
   main: 'dist/index.js'
