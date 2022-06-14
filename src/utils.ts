@@ -5,7 +5,7 @@ import fs from 'fs-extra'
 import globby from 'globby'
 import difference from 'lodash.difference'
 import intersection from 'lodash.intersection'
-import ignores from '@aiou/eslint-ignore'
+import ignores from './ignores'
 import * as core from '@actions/core'
 import * as Diff from 'diff'
 
@@ -59,7 +59,7 @@ export const readChangelog = () => {
   }
   const changelogOfTarget = fs.readFileSync(rt('CHANGELOG.md')).toString()
   const diff = Diff.diffLines(changelogOfTarget, changelogOfSource)
-  return diff.find(d => d.added)?.value || 'update cheatsheets template'
+  return diff.find((d) => d.added)?.value || 'update cheatsheets template'
 }
 
 export const readTitle = () => {
