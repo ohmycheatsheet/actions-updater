@@ -1,5 +1,11 @@
 # @omcs/actions-updater
 
+## 1.1.2
+
+### Patch Changes
+
+- 2a102a5: should not ignore lockfile
+
 ## 1.1.1
 
 ### Patch Changes
