@@ -1,5 +1,11 @@
 # @omcs/actions-updater
 
+## 1.1.1
+
+### Patch Changes
+
+- e364a35: pr changelog body
+
 ## 1.1.0
 
 ### Minor Changes
