@@ -2599,77 +2599,6 @@ function copyFile(srcFile, destFile, force) {
 
 /***/ }),
 
-/***/ 9258:
-/***/ ((module) => {
-
-module.exports = [
-  'logs',
-  '*.log',
-  'npm-debug.log*',
-  'yarn-debug.log*',
-  'yarn-error.log*',
-  'lerna-debug.log*',
-  '.pnpm-debug.log*',
-  'report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json',
-  'pids',
-  '*.pid',
-  '*.seed',
-  '*.pid.lock',
-  'lib-cov',
-  'coverage',
-  '*.lcov',
-  '.nyc_output',
-  '.grunt',
-  'bower_components',
-  '.lock-wscript',
-  'build/Release',
-  'node_modules/',
-  'jspm_packages/',
-  'web_modules/',
-  '*.tsbuildinfo',
-  '.npm',
-  '.eslintcache',
-  '.rpt2_cache/',
-  '.rts2_cache_cjs/',
-  '.rts2_cache_es/',
-  '.rts2_cache_umd/',
-  '.node_repl_history',
-  '*.tgz',
-  '.yarn-integrity',
-  '.env',
-  '.env.test',
-  '.env.production',
-  '.cache',
-  '.parcel-cache',
-  '.next',
-  'out',
-  '.nuxt',
-  'dist',
-  '.cache/',
-  '.vuepress/dist',
-  '.serverless/',
-  '.fusebox/',
-  '.dynamodb/',
-  '.tern-port',
-  '.vscode-test',
-  '.yarn/cache',
-  '.yarn/unplugged',
-  '.yarn/build-state.yml',
-  '.yarn/install-state.gz',
-  '.pnp.*',
-  '**/pnpm-lock.yaml',
-  '**/pnpm-workspace.yaml',
-  '*.lock',
-  'dist',
-  'lib',
-  'jest',
-  '.next',
-  '.nuxt',
-]
-
-
-/***/ }),
-
 /***/ 3262:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -25967,6 +25896,17 @@ exports.clone = clone;
 
 /***/ }),
 
+/***/ 1305:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.default = ["logs", "*.log", "npm-debug.log*", "yarn-debug.log*", "yarn-error.log*", "lerna-debug.log*", ".pnpm-debug.log*", "report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json", "pids", "*.pid", "*.seed", "*.pid.lock", "lib-cov", "coverage", "*.lcov", ".nyc_output", ".grunt", "bower_components", ".lock-wscript", "build/Release", "node_modules/", "jspm_packages/", "web_modules/", "*.tsbuildinfo", ".npm", ".eslintcache", ".stylelintcache", ".rpt2_cache/", ".rts2_cache_cjs/", ".rts2_cache_es/", ".rts2_cache_umd/", ".node_repl_history", "*.tgz", ".yarn-integrity", ".env", ".env.development.local", ".env.test.local", ".env.production.local", ".env.local", ".cache", ".parcel-cache", ".next", "out", ".nuxt", "dist", ".cache/", ".vuepress/dist", ".temp", ".docusaurus", ".serverless/", ".fusebox/", ".dynamodb/", ".tern-port", ".vscode-test", ".yarn/cache", ".yarn/unplugged", ".yarn/build-state.yml", ".yarn/install-state.gz", ".pnp.*", ".webpack/", ".svelte-kit"];
+
+
+/***/ }),
+
 /***/ 8849:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -26074,7 +26014,7 @@ var fs_extra_1 = (0, tslib_1.__importDefault)(__nccwpck_require__(9938));
 var globby_1 = (0, tslib_1.__importDefault)(__nccwpck_require__(7845));
 var lodash_difference_1 = (0, tslib_1.__importDefault)(__nccwpck_require__(3408));
 var lodash_intersection_1 = (0, tslib_1.__importDefault)(__nccwpck_require__(2470));
-var eslint_ignore_1 = (0, tslib_1.__importDefault)(__nccwpck_require__(9258));
+var ignores_1 = (0, tslib_1.__importDefault)(__nccwpck_require__(1305));
 var core = (0, tslib_1.__importStar)(__nccwpck_require__(5251));
 var Diff = (0, tslib_1.__importStar)(__nccwpck_require__(3633));
 var constants_1 = __nccwpck_require__(1005);
@@ -26193,7 +26133,7 @@ var update = function () { return (0, tslib_1.__awaiter)(void 0, void 0, void 0,
     return (0, tslib_1.__generator)(this, function (_c) {
         switch (_c.label) {
             case 0:
-                defaultIgnores = ['.git', '.github'].concat(eslint_ignore_1.default).concat(core.getInput('ignores') || []);
+                defaultIgnores = ['.git', '.github'].concat(ignores_1.default).concat(core.getInput('ignores') || []);
                 return [4 /*yield*/, (0, globby_1.default)(['**'], {
                         cwd: (0, exports.rs)(),
                         gitignore: true,
